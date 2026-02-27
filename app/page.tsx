@@ -1,7 +1,8 @@
 import Link from "next/link";
-import Image from "next/image";
 import { prisma } from "../lib/prisma";
 import { TechnologiesSection } from "../components/TechnologiesSection";
+import { AutoScrollRow } from "../components/AutoScrollRow";
+import { ProjectCardLink } from "../components/ProjectCardLink";
 
 export const revalidate = 60;
 
@@ -31,21 +32,21 @@ export default async function HomePage() {
             title: "Modern Business Site",
             slug: "web-design",
             description: "Architecture moderne et SEO-ready.",
-            imageUrl: "",
+            imageUrl: "/modern-business-site.png",
           },
           {
             id: "demo-2",
             title: "E-Commerce Platform",
             slug: "web-design",
             description: "Parcours utilisateur sécurisé et rapide.",
-            imageUrl: "",
+            imageUrl: "/ecommerce-platform.png",
           },
           {
             id: "demo-3",
             title: "Custom Dashboard",
             slug: "web-design",
             description: "Espace admin sécurisé avec API durcies.",
-            imageUrl: "",
+            imageUrl: "/custom-dashboard.png",
           },
         ];
 
@@ -85,43 +86,20 @@ export default async function HomePage() {
             <div className="h-px flex-1 bg-cyan-400/30" />
           </div>
 
-          <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
-            {projectCards.map((p: ProjectCard, index) => (
-              <Link
-                key={p.id}
-                href={p.slug === "web-design" ? "/web-design" : `/web-design/${p.slug}`}
-                className="group overflow-hidden rounded-xl border border-cyan-400/20 bg-slate-950/80 shadow-[0_0_24px_rgba(14,165,233,0.12)]"
-              >
-                <div className="relative aspect-[16/10] w-full overflow-hidden">
-                  {p.imageUrl ? (
-                    <Image
-                      src={p.imageUrl}
-                      alt={p.title}
-                      fill
-                      sizes="(min-width: 768px) 33vw, 100vw"
-                      className="object-cover transition duration-300 group-hover:scale-[1.03]"
-                    />
-                  ) : (
-                    <div
-                      className={`h-full w-full bg-gradient-to-br ${
-                        index === 0
-                          ? "from-blue-900 via-slate-900 to-cyan-900"
-                          : index === 1
-                            ? "from-slate-900 via-blue-950 to-orange-900"
-                            : "from-slate-950 via-blue-900 to-cyan-950"
-                      }`}
-                    />
-                  )}
-                </div>
-                <div className="p-3">
-                  <h3 className="text-xl font-semibold text-white">{p.title}</h3>
-                  <span className="mt-2 inline-flex rounded-md border border-cyan-400/40 bg-cyan-500/20 px-3 py-1 text-sm font-semibold text-cyan-100">
-                    View Project
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
+          <AutoScrollRow className="hide-scrollbar mt-5 grid grid-cols-1 gap-4 md:flex md:gap-6 md:overflow-x-auto md:pb-3">
+            {projectCards.map((p: ProjectCard, index) => {
+              const href =
+                p.title === "Modern Business Site"
+                  ? "https://primegaming.space"
+                  : p.title === "E-Commerce Platform" || p.title === "Custom Dashboard"
+                    ? "https://futurind.space"
+                    : p.slug === "web-design"
+                      ? "/web-design"
+                      : `/web-design/${p.slug}`;
+
+              return <ProjectCardLink key={p.id} href={href} title={p.title} imageUrl={p.imageUrl || undefined} index={index} />;
+            })}
+          </AutoScrollRow>
         </section>
 
         <section className="pb-12 pt-4 text-center">

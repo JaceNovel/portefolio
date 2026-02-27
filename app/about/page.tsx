@@ -112,13 +112,23 @@ export default function AboutPage() {
               <p className="mt-1 text-lg text-cyan-300">Cybersecurity Student @ YNOV</p>
 
               <div className="mt-3 flex gap-2">
-                <a href="#" className="rounded-md border border-slate-700 bg-slate-900/80 p-1.5 text-slate-100">
+                <span className="rounded-md border border-slate-700 bg-slate-900/80 p-1.5 text-slate-100" aria-label="LinkedIn (coming soon)">
                   <SiLinkedin />
-                </a>
-                <a href="#" className="rounded-md border border-slate-700 bg-slate-900/80 p-1.5 text-slate-100">
+                </span>
+                <a
+                  href="https://github.com/JaceNovel"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-md border border-slate-700 bg-slate-900/80 p-1.5 text-slate-100"
+                  aria-label="GitHub"
+                >
                   <SiGithub />
                 </a>
-                <a href="mailto:contact@example.com" className="rounded-md border border-slate-700 bg-slate-900/80 p-1.5 text-slate-100">
+                <a
+                  href="mailto:jacenovel@gmail.com"
+                  className="rounded-md border border-slate-700 bg-slate-900/80 p-1.5 text-slate-100"
+                  aria-label="Email"
+                >
                   <SiMinutemailer />
                 </a>
               </div>
