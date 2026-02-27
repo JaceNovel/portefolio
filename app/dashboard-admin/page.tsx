@@ -6,6 +6,36 @@ import { FiBarChart2, FiBookOpen, FiClipboard, FiFileText, FiGlobe, FiMail, FiSh
 
 export const dynamic = "force-dynamic";
 
+type RecentClientRequestItem = {
+  id: string;
+  name: string;
+  budget: string | null;
+  estimateCents: number | null;
+  source: string;
+  requestType: string | null;
+  siteType: string | null;
+};
+
+type OpenAuditItem = {
+  id: string;
+  websiteUrl: string;
+  createdAt: Date;
+  status: string;
+};
+
+type LatestProjectItem = {
+  id: string;
+  title: string;
+  imageUrl: string;
+};
+
+type LatestBlogPostItem = {
+  id: string;
+  title: string;
+  excerpt: string;
+  createdAt: Date;
+};
+
 function formatDateLabel(value: Date) {
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
@@ -51,7 +81,8 @@ export default async function DashboardAdminPage() {
     openAudits,
     latestProjects,
     latestBlogPosts,
-  ] = await Promise.all([
+  ]: [number, number, number, number, RecentClientRequestItem[], OpenAuditItem[], LatestProjectItem[], LatestBlogPostItem[]] =
+    await Promise.all([
     prisma.projectRequest.count(),
     prisma.securityAuditRequest.count({ where: { status: { not: "Terminé" } } }),
     prisma.webProject.count(),
@@ -192,7 +223,7 @@ export default async function DashboardAdminPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {recentClientRequests.map((item) => (
+                    {recentClientRequests.map((item: RecentClientRequestItem) => (
                       <tr key={item.id} className="border-t border-slate-800/70 text-slate-100">
                         <td className="px-3 py-2">{getScopeLabel(item)}</td>
                         <td className="px-3 py-2">{item.name}</td>
@@ -225,7 +256,7 @@ export default async function DashboardAdminPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {openAudits.map((audit) => (
+                    {openAudits.map((audit: OpenAuditItem) => (
                       <tr key={audit.id} className="border-t border-slate-800/70 text-slate-100">
                         <td className="px-3 py-2">{audit.websiteUrl}</td>
                         <td className="px-3 py-2">{formatDateLabel(audit.createdAt)}</td>
@@ -251,7 +282,7 @@ export default async function DashboardAdminPage() {
             <article id="projects" className="rounded-2xl border border-cyan-400/20 bg-slate-950/55 p-4">
               <h2 className="text-2xl font-semibold text-white">Latest Web Projects</h2>
               <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                {latestProjects.map((project) => (
+                {latestProjects.map((project: LatestProjectItem) => (
                   <div key={project.id} className="overflow-hidden rounded-xl border border-slate-700/70 bg-slate-900/70">
                     <img src={project.imageUrl} alt={project.title} className="h-24 w-full object-cover" loading="lazy" />
                     <p className="px-3 py-2 text-sm text-slate-100">{project.title}</p>
@@ -268,7 +299,7 @@ export default async function DashboardAdminPage() {
             <article id="blog" className="rounded-2xl border border-cyan-400/20 bg-slate-950/55 p-4">
               <h2 className="text-2xl font-semibold text-white">Blog Activity</h2>
               <div className="mt-4 space-y-4">
-                {latestBlogPosts.map((post) => (
+                {latestBlogPosts.map((post: LatestBlogPostItem) => (
                   <div key={post.id} className="border-b border-slate-800/70 pb-3 last:border-0 last:pb-0">
                     <div className="flex items-start justify-between gap-3">
                       <h3 className="text-lg font-semibold text-slate-100">{post.title}</h3>
