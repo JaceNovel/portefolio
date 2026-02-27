@@ -6,8 +6,16 @@ import { unstable_cache } from "next/cache";
 
 export const revalidate = 60;
 
+type BlogPostPreview = {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  createdAt: Date;
+};
+
 const getPublishedPostsCached = unstable_cache(
-  async () => {
+  async (): Promise<BlogPostPreview[]> => {
     return prisma.blogPost.findMany({
       where: { published: true },
       orderBy: { createdAt: "desc" },
@@ -33,8 +41,7 @@ function formatDate(date: Date) {
 
 export default async function BlogPage() {
   let dbOk = true;
-  const posts = await getPublishedPostsCached()
-    .catch(() => {
+  const posts: BlogPostPreview[] = await getPublishedPostsCached().catch(() => {
       dbOk = false;
       return [];
     });
