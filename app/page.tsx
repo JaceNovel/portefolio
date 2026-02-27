@@ -5,8 +5,16 @@ import { TechnologiesSection } from "../components/TechnologiesSection";
 
 export const revalidate = 60;
 
+type ProjectCard = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  imageUrl: string;
+};
+
 export default async function HomePage() {
-  const projects = await prisma.webProject
+  const projects: ProjectCard[] = await prisma.webProject
     .findMany({
       orderBy: { createdAt: "desc" },
       take: 3,
@@ -14,7 +22,7 @@ export default async function HomePage() {
     })
     .catch(() => []);
 
-  const projectCards =
+  const projectCards: ProjectCard[] =
     projects.length > 0
       ? projects
       : [
@@ -78,7 +86,7 @@ export default async function HomePage() {
           </div>
 
           <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
-            {projectCards.map((p, index) => (
+            {projectCards.map((p: ProjectCard, index) => (
               <Link
                 key={p.id}
                 href={p.slug === "web-design" ? "/web-design" : `/web-design/${p.slug}`}
