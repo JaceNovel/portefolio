@@ -36,6 +36,18 @@ type LatestBlogPostItem = {
   createdAt: Date;
 };
 
+type LatestClientItem = {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: Date;
+  mustResetPassword: boolean;
+  _count: {
+    projects: number;
+    messages: number;
+  };
+};
+
 function formatDateLabel(value: Date) {
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
@@ -76,10 +88,12 @@ export default async function DashboardAdminPage() {
   let pendingAuditsCount = 0;
   let webProjectsCount = 0;
   let publishedBlogPostsCount = 0;
+  let clientsCount = 0;
   let recentClientRequests: RecentClientRequestItem[] = [];
   let openAudits: OpenAuditItem[] = [];
   let latestProjects: LatestProjectItem[] = [];
   let latestBlogPosts: LatestBlogPostItem[] = [];
+  let latestClients: LatestClientItem[] = [];
   let dataLoadFailed = false;
 
   try {
@@ -88,15 +102,18 @@ export default async function DashboardAdminPage() {
       number,
       number,
       number,
+      number,
       RecentClientRequestItem[],
       OpenAuditItem[],
       LatestProjectItem[],
       LatestBlogPostItem[],
+      LatestClientItem[],
     ] = await Promise.all([
       prisma.projectRequest.count(),
       prisma.securityAuditRequest.count({ where: { status: { not: "Terminé" } } }),
       prisma.webProject.count(),
       prisma.blogPost.count({ where: { published: true } }),
+      prisma.client.count(),
       prisma.projectRequest.findMany({
         orderBy: { createdAt: "desc" },
         take: 4,
@@ -127,6 +144,23 @@ export default async function DashboardAdminPage() {
         take: 2,
         select: { id: true, title: true, excerpt: true, createdAt: true },
       }),
+      prisma.client.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 5,
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          createdAt: true,
+          mustResetPassword: true,
+          _count: {
+            select: {
+              projects: true,
+              messages: true,
+            },
+          },
+        },
+      }),
     ]);
 
     [
@@ -134,10 +168,12 @@ export default async function DashboardAdminPage() {
       pendingAuditsCount,
       webProjectsCount,
       publishedBlogPostsCount,
+      clientsCount,
       recentClientRequests,
       openAudits,
       latestProjects,
       latestBlogPosts,
+      latestClients,
     ] = results;
   } catch {
     dataLoadFailed = true;
@@ -188,7 +224,7 @@ export default async function DashboardAdminPage() {
               <FiBookOpen className="h-4 w-4" aria-hidden="true" />
               Blog Posts
             </a>
-            <a href="#" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-200 transition hover:bg-slate-900/80">
+            <a href="#clients" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-200 transition hover:bg-slate-900/80">
               <FiUser className="h-4 w-4" aria-hidden="true" />
               Clients
             </a>
@@ -243,6 +279,14 @@ export default async function DashboardAdminPage() {
                 <span className="text-3xl font-semibold text-white">{publishedBlogPostsCount}</span>
               </div>
               <p className="mt-3 text-sm text-slate-200">Published Blog Posts</p>
+            </article>
+
+            <article className="rounded-2xl border border-cyan-400/25 bg-slate-950/80 p-4 shadow-[0_0_20px_rgba(34,211,238,0.12)]">
+              <div className="flex items-center justify-between text-cyan-200">
+                <FiUser className="h-6 w-6" aria-hidden="true" />
+                <span className="text-3xl font-semibold text-white">{clientsCount}</span>
+              </div>
+              <p className="mt-3 text-sm text-slate-200">Clients</p>
             </article>
           </div>
 
@@ -345,6 +389,55 @@ export default async function DashboardAdminPage() {
                   </div>
                 ))}
                 {latestBlogPosts.length === 0 ? <p className="text-sm text-slate-300">No blog activity yet.</p> : null}
+              </div>
+            </article>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            <article id="clients" className="rounded-2xl border border-cyan-400/20 bg-slate-950/55 p-4">
+              <h2 className="text-2xl font-semibold text-white">Latest Clients</h2>
+              <div className="mt-4 overflow-x-auto rounded-xl border border-slate-800/80">
+                <table className="min-w-[820px] w-full text-left text-sm">
+                  <thead className="bg-slate-900/70 text-slate-300">
+                    <tr>
+                      <th className="px-3 py-2 font-medium">Name</th>
+                      <th className="px-3 py-2 font-medium">Email</th>
+                      <th className="px-3 py-2 font-medium">Created</th>
+                      <th className="px-3 py-2 font-medium">Projects</th>
+                      <th className="px-3 py-2 font-medium">Messages</th>
+                      <th className="px-3 py-2 font-medium">Reset</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {latestClients.map((client: LatestClientItem) => (
+                      <tr key={client.id} className="border-t border-slate-800/70 text-slate-100">
+                        <td className="px-3 py-2 align-top break-words">{client.name}</td>
+                        <td className="px-3 py-2 align-top break-all text-slate-200">{client.email}</td>
+                        <td className="px-3 py-2 whitespace-nowrap text-slate-300">{formatDateLabel(client.createdAt)}</td>
+                        <td className="px-3 py-2">
+                          <span className="rounded-md bg-cyan-500/15 px-2 py-1 text-cyan-200">{client._count.projects}</span>
+                        </td>
+                        <td className="px-3 py-2">
+                          <span className="rounded-md bg-slate-800/70 px-2 py-1 text-slate-200">{client._count.messages}</span>
+                        </td>
+                        <td className="px-3 py-2">
+                          {client.mustResetPassword ? (
+                            <span className="rounded-md bg-amber-500/15 px-2 py-1 text-amber-200">Required</span>
+                          ) : (
+                            <span className="rounded-md bg-emerald-500/15 px-2 py-1 text-emerald-200">OK</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                    {latestClients.length === 0 ? (
+                      <tr>
+                        <td className="px-3 py-3 text-slate-300" colSpan={6}>
+                          No clients yet.
+                        </td>
+                      </tr>
+                    ) : null}
+                  </tbody>
+                </table>
               </div>
             </article>
           </div>
