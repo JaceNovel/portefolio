@@ -11,31 +11,8 @@ Portfolio professionnel (Jonadab AMAH) — Next.js App Router + TypeScript + Tai
 ## Pré-requis
 
 - Node.js
-- PostgreSQL (local ou distant) — `DATABASE_URL` doit être une URL TCP type `postgresql://...`
+- PostgreSQL managé (Vercel Postgres / Neon / Supabase / Railway...) — `DATABASE_URL` doit être une URL TCP type `postgresql://...`
 - Variables d’environnement (voir `.env.example`)
-
-### Option simple: PostgreSQL en Docker
-
-Un `docker-compose.yml` est fourni.
-Si PostgreSQL est déjà installé en local et écoute sur `5432`, il faudra soit arrêter le service (`sudo systemctl stop postgresql`), soit changer le port exposé dans `docker-compose.yml`.
-
-1) Démarrer la DB:
-
-```bash
-docker-compose up -d
-```
-
-2) Copier et adapter les variables:
-
-```bash
-cp .env.example .env
-```
-
-3) Créer les tables Prisma:
-
-```bash
-npx prisma migrate dev
-```
 
 ## Getting Started
 
@@ -101,7 +78,6 @@ Note: en Preview, les migrations sont volontairement ignorées (pour éviter de 
 ## Commandes utiles
 
 ```bash
-npm run db:up
 npm run prisma:migrate
 npm run dev
 ```
