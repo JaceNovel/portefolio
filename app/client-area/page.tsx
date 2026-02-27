@@ -51,12 +51,12 @@ export default async function ClientAreaPage() {
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-10 sm:py-14">
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-white">Client Area</h1>
           <p className="mt-1 text-sm text-slate-300">{client ? `${client.name} • ${client.email}` : ""}</p>
         </div>
-        <form action="/api/client/logout" method="post">
+        <form action="/api/client/logout" method="post" className="sm:self-start">
           <Button variant="secondary" type="submit">
             Déconnexion
           </Button>
@@ -64,7 +64,7 @@ export default async function ClientAreaPage() {
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <section className="rounded-3xl border border-slate-800/70 bg-slate-950/40 p-5">
+        <section className="rounded-3xl border border-slate-800/70 bg-slate-950/70 p-5">
           <h2 className="text-sm font-semibold text-white">Projets</h2>
           <div className="mt-4 flex flex-col gap-3">
             {projects.map((p: ClientProjectItem) => (
@@ -98,7 +98,7 @@ export default async function ClientAreaPage() {
           </div>
         </section>
 
-        <section className="rounded-3xl border border-slate-800/70 bg-slate-950/40 p-5">
+        <section className="rounded-3xl border border-slate-800/70 bg-slate-950/70 p-5">
           <h2 className="text-sm font-semibold text-white">Messages</h2>
           <div className="mt-4 flex flex-col gap-3">
             <MessageComposer />

@@ -15,7 +15,7 @@ type FeatureCardProps = {
 
 function FeatureCard({ title, description, imageUrl, imageAlt }: FeatureCardProps) {
   return (
-    <section className="group relative overflow-hidden rounded-2xl border border-cyan-400/15 bg-slate-950/45 shadow-[0_0_28px_rgba(14,165,233,0.10)] md:min-h-[210px]">
+    <section className="group relative overflow-hidden rounded-2xl border border-cyan-400/15 bg-slate-950/70 shadow-[0_0_28px_rgba(14,165,233,0.10)] md:min-h-[210px]">
       <div className="absolute inset-0 bg-gradient-to-b from-white/5 via-transparent to-transparent" />
       <div className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
         <div className="absolute -left-24 -top-24 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl" />
@@ -48,11 +48,6 @@ function FeatureCard({ title, description, imageUrl, imageAlt }: FeatureCardProp
 export default function CybersecurityPage() {
   return (
     <main className="home-cyber-bg relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 opacity-70 [background-image:radial-gradient(circle_at_20%_20%,rgba(34,211,238,0.20),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(59,130,246,0.20),transparent_42%),radial-gradient(circle_at_60%_90%,rgba(168,85,247,0.14),transparent_46%)]" />
-        <div className="absolute inset-0 opacity-35 [background-image:radial-gradient(rgba(148,163,184,0.22)_1px,transparent_1px)] [background-size:28px_28px]" />
-      </div>
-
       <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
         <div className="relative text-xs text-slate-300 sm:text-sm">
           <Link href="/" className="hover:text-white">
@@ -108,7 +103,7 @@ export default function CybersecurityPage() {
           <div className="mt-5">
             <Link
               href="/audit-security"
-              className="inline-flex items-center justify-center rounded-xl border border-cyan-300/40 bg-cyan-500/10 px-6 py-3 text-sm font-semibold text-cyan-100 shadow-[0_0_18px_rgba(34,211,238,0.22)] backdrop-blur hover:bg-cyan-500/20"
+              className="inline-flex items-center justify-center rounded-xl border border-cyan-300/40 bg-cyan-500/20 px-6 py-3 text-sm font-semibold text-cyan-100 shadow-[0_0_18px_rgba(34,211,238,0.22)] backdrop-blur hover:bg-cyan-500/30"
             >
               Request an Audit
             </Link>

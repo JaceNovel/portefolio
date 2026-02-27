@@ -40,19 +40,17 @@ function formatDate(date: Date) {
 }
 
 export default async function BlogPage() {
-  let dbOk = true;
-  const posts: BlogPostPreview[] = await getPublishedPostsCached().catch(() => {
-      dbOk = false;
-      return [];
-    });
+  const postsResult = await getPublishedPostsCached()
+    .then((result) => ({ dbOk: true as const, posts: result }))
+    .catch(() => ({ dbOk: false as const, posts: [] as BlogPostPreview[] }));
+
+  const { dbOk, posts } = postsResult;
 
   const featuredPosts = posts.slice(0, 3);
   const recentPosts = posts.slice(3);
 
   return (
     <main className="home-cyber-bg relative min-h-screen overflow-hidden pb-14">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_8%,rgba(56,189,248,0.18),transparent_35%),radial-gradient(circle_at_8%_42%,rgba(59,130,246,0.14),transparent_30%),radial-gradient(circle_at_92%_80%,rgba(34,211,238,0.12),transparent_34%)]" />
-
       <div className="relative mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-14">
         <div className="mx-auto max-w-3xl text-center">
           <h1 className="text-4xl font-bold tracking-tight text-cyan-200 sm:text-6xl">Blog</h1>
@@ -63,7 +61,7 @@ export default async function BlogPage() {
         </div>
 
         {posts.length === 0 ? (
-          <div className="mx-auto mt-10 max-w-3xl rounded-2xl border border-slate-700/70 bg-slate-900/50 p-5 text-sm text-slate-200">
+          <div className="mx-auto mt-10 max-w-3xl rounded-2xl border border-slate-700/70 bg-slate-900/75 p-5 text-sm text-slate-200">
             {dbOk ? "Aucun article publié pour le moment." : "Blog temporairement indisponible (base de données inaccessible)."}
           </div>
         ) : (
@@ -73,11 +71,11 @@ export default async function BlogPage() {
                 <Link
                   key={post.id}
                   href={`/blog/${post.slug}`}
-                  className="group overflow-hidden rounded-2xl border border-cyan-200/20 bg-slate-900/55 backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-cyan-200/45"
+                  className="group overflow-hidden rounded-2xl border border-cyan-200/20 bg-slate-900/80 backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-cyan-200/45"
                 >
                   <div className="relative h-44 overflow-hidden border-b border-cyan-200/15 bg-gradient-to-br from-slate-900 via-blue-950/80 to-cyan-950/60">
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(56,189,248,0.25),transparent_32%),radial-gradient(circle_at_80%_86%,rgba(59,130,246,0.25),transparent_35%)]" />
-                    <span className="absolute left-4 top-4 rounded-full border border-cyan-300/35 bg-cyan-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-cyan-100">
+                    <span className="absolute left-4 top-4 rounded-full border border-cyan-300/35 bg-cyan-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-cyan-100">
                       Article {index + 1}
                     </span>
                   </div>
@@ -106,7 +104,7 @@ export default async function BlogPage() {
                     <Link
                       key={post.id}
                       href={`/blog/${post.slug}`}
-                      className="group rounded-2xl border border-slate-700/60 bg-slate-900/45 p-4 transition hover:border-cyan-300/40 hover:bg-slate-900/65"
+                      className="group rounded-2xl border border-slate-700/60 bg-slate-900/75 p-4 transition hover:border-cyan-300/40 hover:bg-slate-900/85"
                     >
                       <div className="flex flex-col gap-4 sm:flex-row">
                         <div className="h-28 w-full shrink-0 rounded-xl border border-cyan-300/20 bg-gradient-to-br from-slate-900 via-blue-950/80 to-cyan-950/65 sm:w-40" />
@@ -121,7 +119,7 @@ export default async function BlogPage() {
                 </div>
               </div>
 
-              <aside className="rounded-2xl border border-slate-700/60 bg-slate-900/45 p-5">
+              <aside className="rounded-2xl border border-slate-700/60 bg-slate-900/75 p-5">
                 <label htmlFor="blog-search" className="sr-only">
                   Rechercher un article
                 </label>
@@ -137,7 +135,7 @@ export default async function BlogPage() {
 
                 <p className="mt-8 text-sm leading-6 text-slate-300">Recevez les derniers articles et analyses publiés par l’équipe.</p>
 
-                <div className="mt-5 flex items-center">
+                <div className="mt-5 flex flex-wrap items-center">
                   {[
                     "https://i.pravatar.cc/96?img=12",
                     "https://i.pravatar.cc/96?img=32",
@@ -148,12 +146,12 @@ export default async function BlogPage() {
                       <Image src={src} alt={`Profil ${index + 1}`} width={44} height={44} className="h-11 w-11 object-cover" />
                     </div>
                   ))}
-                  <div className="ml-3 rounded-full border border-cyan-300/40 bg-cyan-500/10 px-3 py-1 text-sm font-semibold text-cyan-100">+290</div>
+                  <div className="ml-3 rounded-full border border-cyan-300/40 bg-cyan-500/20 px-3 py-1 text-sm font-semibold text-cyan-100">+290</div>
                 </div>
 
                 <Link
                   href="/contact"
-                  className="mt-8 inline-flex h-11 items-center rounded-xl border border-cyan-300/35 bg-cyan-500/10 px-4 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-500/20"
+                  className="mt-8 inline-flex h-11 items-center rounded-xl border border-cyan-300/35 bg-cyan-500/20 px-4 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-500/30"
                 >
                   Discuter de votre projet
                 </Link>

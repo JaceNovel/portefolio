@@ -43,11 +43,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  let dbOk = true;
-  const post = await getPostCached(slug).catch(() => {
-    dbOk = false;
-    return null;
-  });
+  const postResult = await getPostCached(slug)
+    .then((post) => ({ dbOk: true as const, post }))
+    .catch(() => ({ dbOk: false as const, post: null }));
+
+  const { dbOk, post } = postResult;
+
   if (!post) {
     if (!dbOk) {
       return (

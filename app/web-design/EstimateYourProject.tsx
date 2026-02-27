@@ -32,6 +32,12 @@ type BrandingState = {
 
 type Issues = Array<{ path: Array<string | number>; message: string }>;
 
+const PRICING_DISCOUNT = 0.6;
+
+function applyDiscount(value: number) {
+  return Math.round(value * PRICING_DISCOUNT);
+}
+
 function euros(amount: number) {
   return `${amount} €`;
 }
@@ -103,8 +109,10 @@ function computeAiAdjustment(params: {
   score += stackDelta[params.stack];
 
   // Convert score to a small euros adjustment range.
-  const min = Math.max(-10, Math.round(score * 0.35));
-  const max = Math.max(0, Math.round(score * 0.6));
+  const rawMin = Math.max(-10, Math.round(score * 0.35));
+  const rawMax = Math.max(0, Math.round(score * 0.6));
+  const min = Math.round(rawMin * PRICING_DISCOUNT);
+  const max = Math.round(rawMax * PRICING_DISCOUNT);
   return { min, max, score };
 }
 
@@ -115,7 +123,7 @@ function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (nex
       className={
         checked
           ? "relative inline-flex h-7 w-12 items-center rounded-full bg-emerald-500/25 ring-1 ring-inset ring-emerald-400/40 transition"
-          : "relative inline-flex h-7 w-12 items-center rounded-full bg-slate-950/40 ring-1 ring-inset ring-white/10 transition"
+          : "relative inline-flex h-7 w-12 items-center rounded-full bg-slate-950/65 ring-1 ring-inset ring-white/10 transition"
       }
       aria-pressed={checked}
       aria-label={label}
@@ -251,8 +259,8 @@ export function EstimateYourProject() {
 
   const stepPillClass = (n: 1 | 2 | 3 | 4) =>
     n === step
-      ? "inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-500/10 px-3 py-1 text-cyan-100"
-      : "inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-950/30 px-3 py-1 text-slate-200/85 hover:border-white/15";
+      ? "inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-500/20 px-3 py-1 text-cyan-100"
+      : "inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-950/60 px-3 py-1 text-slate-200/85 hover:border-white/15";
 
   const stepNumberClass = (n: 1 | 2 | 3 | 4) =>
     n === step
@@ -265,41 +273,41 @@ export function EstimateYourProject() {
     custom: "Custom Web App",
   };
 
-  const estimate = useMemo(() => {
-    const baseRangesByType: Record<WebsiteType, { min: number; max: number; title: string; subtitle: string }> = {
-      business: {
-        min: 120,
-        max: 190,
-        title: "Business Website",
-        subtitle: "Professional • Fast • SEO Ready",
-      },
-      ecommerce: {
-        min: 160,
-        max: 280,
-        title: "E-Commerce",
-        subtitle: "Payments • Products • Admin",
-      },
-      custom: {
-        min: 210,
-        max: 315,
-        title: "Custom Web App",
-        subtitle: "Tailor-made • Dashboard • API",
-      },
-    };
+  const baseRangesByType: Record<WebsiteType, { min: number; max: number; title: string; subtitle: string }> = {
+    business: {
+      min: applyDiscount(120),
+      max: applyDiscount(190),
+      title: "Business Website",
+      subtitle: "Professional • Fast • SEO Ready",
+    },
+    ecommerce: {
+      min: applyDiscount(160),
+      max: applyDiscount(280),
+      title: "E-Commerce",
+      subtitle: "Payments • Products • Admin",
+    },
+    custom: {
+      min: applyDiscount(210),
+      max: applyDiscount(315),
+      title: "Custom Web App",
+      subtitle: "Tailor-made • Dashboard • API",
+    },
+  };
 
-    const perPageByType: Record<WebsiteType, number> = {
-      business: 12,
-      ecommerce: 16,
-      custom: 18,
-    };
+  const perPageByType: Record<WebsiteType, number> = {
+    business: applyDiscount(12),
+    ecommerce: applyDiscount(16),
+    custom: applyDiscount(18),
+  };
 
-    const optionsPrice: Record<keyof OptionsState, number> = {
-      blog: 20,
-      paymentGateway: 35,
-      adminPanel: 45,
-      seoOptimization: 15,
-    };
+  const optionsPrice: Record<keyof OptionsState, number> = {
+    blog: applyDiscount(20),
+    paymentGateway: applyDiscount(35),
+    adminPanel: applyDiscount(45),
+    seoOptimization: applyDiscount(15),
+  };
 
+  const estimate = (() => {
     const base = baseRangesByType[websiteType];
     const pagesExtra = Math.max(0, normalizedPageCount - 3) * perPageByType[websiteType];
     const optionsExtra = (Object.entries(options) as Array<[keyof OptionsState, boolean]>)
@@ -317,8 +325,8 @@ export function EstimateYourProject() {
     const rawMin = base.min + pagesExtra + optionsExtra + ai.min;
     const rawMax = base.max + pagesExtra + optionsExtra + ai.max;
 
-    const cappedMin = clamp(rawMin, 100, 500);
-    const cappedMax = clamp(rawMax, 100, 500);
+    const cappedMin = clamp(rawMin, applyDiscount(100), applyDiscount(500));
+    const cappedMax = clamp(rawMax, applyDiscount(100), applyDiscount(500));
     const min = Math.min(cappedMin, cappedMax);
     const max = Math.max(cappedMin, cappedMax);
 
@@ -332,7 +340,7 @@ export function EstimateYourProject() {
       min,
       max,
     };
-  }, [normalizedPageCount, options, projectMessage, stack, websiteType]);
+  })();
 
   return (
     <section className="mt-10">
@@ -347,7 +355,7 @@ export function EstimateYourProject() {
           <div className="mx-auto mt-5 h-1 w-64 rounded-full bg-cyan-400/80 shadow-[0_0_18px_rgba(34,211,238,0.55)]" />
         </div>
 
-        <div className="mt-6 overflow-hidden rounded-2xl border border-cyan-400/15 bg-slate-950/45 shadow-[0_0_30px_rgba(14,165,233,0.12)]">
+        <div className="mt-6 overflow-hidden rounded-2xl border border-cyan-400/15 bg-slate-950/70 shadow-[0_0_30px_rgba(14,165,233,0.12)]">
           <div className="grid grid-cols-1 gap-0 lg:grid-cols-12">
             <div className="relative p-4 lg:col-span-8 lg:p-6">
               <div className="pointer-events-none absolute inset-0">
@@ -388,8 +396,8 @@ export function EstimateYourProject() {
                       onClick={() => setWebsiteType("business")}
                       className={
                         websiteType === "business"
-                          ? "relative overflow-hidden rounded-2xl border border-emerald-400/40 bg-slate-950/40 p-4 text-left shadow-[0_0_22px_rgba(16,185,129,0.18)]"
-                          : "relative overflow-hidden rounded-2xl border border-white/10 bg-slate-950/25 p-4 text-left hover:border-white/15"
+                          ? "relative overflow-hidden rounded-2xl border border-emerald-400/40 bg-slate-950/70 p-4 text-left shadow-[0_0_22px_rgba(16,185,129,0.18)]"
+                          : "relative overflow-hidden rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-left hover:border-white/15"
                       }
                       aria-pressed={websiteType === "business"}
                     >
@@ -402,7 +410,9 @@ export function EstimateYourProject() {
                           </span>
                         ) : null}
                       </div>
-                      <div className="mt-2 text-xs font-semibold text-emerald-200">{formatRangeEuros(120, 190)}</div>
+                      <div className="mt-2 text-xs font-semibold text-emerald-200">
+                        {formatRangeEuros(baseRangesByType.business.min, baseRangesByType.business.max)}
+                      </div>
                       <div className="mt-1 text-xs text-slate-300/85">Professional • Fast • SEO Ready</div>
                     </button>
 
@@ -411,8 +421,8 @@ export function EstimateYourProject() {
                       onClick={() => setWebsiteType("ecommerce")}
                       className={
                         websiteType === "ecommerce"
-                          ? "relative overflow-hidden rounded-2xl border border-cyan-400/40 bg-slate-950/40 p-4 text-left shadow-[0_0_22px_rgba(34,211,238,0.16)]"
-                          : "relative overflow-hidden rounded-2xl border border-white/10 bg-slate-950/25 p-4 text-left hover:border-white/15"
+                          ? "relative overflow-hidden rounded-2xl border border-cyan-400/40 bg-slate-950/70 p-4 text-left shadow-[0_0_22px_rgba(34,211,238,0.16)]"
+                          : "relative overflow-hidden rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-left hover:border-white/15"
                       }
                       aria-pressed={websiteType === "ecommerce"}
                     >
@@ -424,7 +434,9 @@ export function EstimateYourProject() {
                           </span>
                         ) : null}
                       </div>
-                      <div className="mt-2 text-xs font-semibold text-cyan-100">{formatRangeEuros(160, 280)}</div>
+                      <div className="mt-2 text-xs font-semibold text-cyan-100">
+                        {formatRangeEuros(baseRangesByType.ecommerce.min, baseRangesByType.ecommerce.max)}
+                      </div>
                       <div className="mt-1 text-xs text-slate-300/85">Payments • Products • Admin</div>
                     </button>
 
@@ -433,8 +445,8 @@ export function EstimateYourProject() {
                       onClick={() => setWebsiteType("custom")}
                       className={
                         websiteType === "custom"
-                          ? "relative overflow-hidden rounded-2xl border border-blue-400/35 bg-slate-950/40 p-4 text-left shadow-[0_0_22px_rgba(59,130,246,0.14)]"
-                          : "relative overflow-hidden rounded-2xl border border-white/10 bg-slate-950/25 p-4 text-left hover:border-white/15"
+                          ? "relative overflow-hidden rounded-2xl border border-blue-400/35 bg-slate-950/70 p-4 text-left shadow-[0_0_22px_rgba(59,130,246,0.14)]"
+                          : "relative overflow-hidden rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-left hover:border-white/15"
                       }
                       aria-pressed={websiteType === "custom"}
                     >
@@ -446,12 +458,14 @@ export function EstimateYourProject() {
                           </span>
                         ) : null}
                       </div>
-                      <div className="mt-2 text-xs font-semibold text-blue-100">{formatRangeEuros(210, 315)}</div>
+                      <div className="mt-2 text-xs font-semibold text-blue-100">
+                        {formatRangeEuros(baseRangesByType.custom.min, baseRangesByType.custom.max)}
+                      </div>
                       <div className="mt-1 text-xs text-slate-300/85">Tailor-made • Dashboard • API</div>
                     </button>
                     </div>
 
-                    <div className="mt-6 rounded-2xl border border-white/10 bg-slate-950/25 p-4">
+                    <div className="mt-6 rounded-2xl border border-white/10 bg-slate-950/60 p-4">
                       <div className="text-sm font-semibold text-white">Tip</div>
                       <div className="mt-1 text-xs text-slate-300/85">Next, pick pages & options, then describe your needs.</div>
                     </div>
@@ -476,8 +490,8 @@ export function EstimateYourProject() {
                           }}
                           className={
                             selectedPackId === p.id
-                              ? "h-11 rounded-xl border border-cyan-300/35 bg-cyan-500/10 text-sm font-semibold text-cyan-50 shadow-[0_0_18px_rgba(34,211,238,0.16)]"
-                              : "h-11 rounded-xl border border-white/10 bg-slate-950/20 text-sm font-semibold text-slate-100 hover:border-white/15"
+                              ? "h-11 rounded-xl border border-cyan-300/35 bg-cyan-500/20 text-sm font-semibold text-cyan-50 shadow-[0_0_18px_rgba(34,211,238,0.16)]"
+                              : "h-11 rounded-xl border border-white/10 bg-slate-950/55 text-sm font-semibold text-slate-100 hover:border-white/15"
                           }
                         >
                           {p.label}
@@ -485,7 +499,7 @@ export function EstimateYourProject() {
                       ))}
                     </div>
 
-                    <div className="mt-4 rounded-2xl border border-white/10 bg-slate-950/25 p-4">
+                    <div className="mt-4 rounded-2xl border border-white/10 bg-slate-950/60 p-4">
                       <input
                         type="range"
                         min={selectedPack.min}
@@ -505,14 +519,14 @@ export function EstimateYourProject() {
                     <div className="mt-7">
                       <div className="text-sm font-semibold text-slate-100">Add Options</div>
                       <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                    <div className="rounded-2xl border border-white/10 bg-slate-950/25 p-4">
+                    <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <div className="text-sm font-semibold text-white">Blog</div>
                           <div className="mt-1 text-xs text-slate-300/85">Articles + basic categories</div>
                         </div>
                         <div className="flex items-center gap-3">
-                          <span className="inline-flex items-center rounded-full border border-white/10 bg-slate-950/40 px-2.5 py-1 text-xs font-semibold text-slate-100">+{euros(20)}</span>
+                          <span className="inline-flex items-center rounded-full border border-white/10 bg-slate-950/65 px-2.5 py-1 text-xs font-semibold text-slate-100">+{euros(optionsPrice.blog)}</span>
                           <Toggle
                             checked={options.blog}
                             onChange={(next) => setOptions((o) => ({ ...o, blog: next }))}
@@ -522,14 +536,14 @@ export function EstimateYourProject() {
                       </div>
                     </div>
 
-                    <div className="rounded-2xl border border-white/10 bg-slate-950/25 p-4">
+                    <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <div className="text-sm font-semibold text-white">Payment Gateway</div>
                           <div className="mt-1 text-xs text-slate-300/85">Stripe / Paypal integration</div>
                         </div>
                         <div className="flex items-center gap-3">
-                          <span className="inline-flex items-center rounded-full border border-white/10 bg-slate-950/40 px-2.5 py-1 text-xs font-semibold text-slate-100">+{euros(35)}</span>
+                          <span className="inline-flex items-center rounded-full border border-white/10 bg-slate-950/65 px-2.5 py-1 text-xs font-semibold text-slate-100">+{euros(optionsPrice.paymentGateway)}</span>
                           <Toggle
                             checked={options.paymentGateway}
                             onChange={(next) => setOptions((o) => ({ ...o, paymentGateway: next }))}
@@ -539,14 +553,14 @@ export function EstimateYourProject() {
                       </div>
                     </div>
 
-                    <div className="rounded-2xl border border-white/10 bg-slate-950/25 p-4">
+                    <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <div className="text-sm font-semibold text-white">Admin Panel</div>
                           <div className="mt-1 text-xs text-slate-300/85">Content & users management</div>
                         </div>
                         <div className="flex items-center gap-3">
-                          <span className="inline-flex items-center rounded-full border border-white/10 bg-slate-950/40 px-2.5 py-1 text-xs font-semibold text-slate-100">+{euros(45)}</span>
+                          <span className="inline-flex items-center rounded-full border border-white/10 bg-slate-950/65 px-2.5 py-1 text-xs font-semibold text-slate-100">+{euros(optionsPrice.adminPanel)}</span>
                           <Toggle
                             checked={options.adminPanel}
                             onChange={(next) => setOptions((o) => ({ ...o, adminPanel: next }))}
@@ -556,14 +570,14 @@ export function EstimateYourProject() {
                       </div>
                     </div>
 
-                    <div className="rounded-2xl border border-white/10 bg-slate-950/25 p-4">
+                    <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <div className="text-sm font-semibold text-white">SEO Optimization</div>
                           <div className="mt-1 text-xs text-slate-300/85">Metadata + basics for ranking</div>
                         </div>
                         <div className="flex items-center gap-3">
-                          <span className="inline-flex items-center rounded-full border border-white/10 bg-slate-950/40 px-2.5 py-1 text-xs font-semibold text-slate-100">+{euros(15)}</span>
+                          <span className="inline-flex items-center rounded-full border border-white/10 bg-slate-950/65 px-2.5 py-1 text-xs font-semibold text-slate-100">+{euros(optionsPrice.seoOptimization)}</span>
                           <Toggle
                             checked={options.seoOptimization}
                             onChange={(next) => setOptions((o) => ({ ...o, seoOptimization: next }))}
@@ -578,32 +592,32 @@ export function EstimateYourProject() {
                     <div className="mt-7">
                       <div className="text-sm font-semibold text-slate-100">Branding (Colors & Logo)</div>
                       <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                    <label className="rounded-2xl border border-white/10 bg-slate-950/25 p-4">
+                    <label className="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
                       <div className="text-sm font-semibold text-white">Primary color</div>
                       <div className="mt-1 text-xs text-slate-300/85">Used for buttons / accents</div>
                       <input
                         type="color"
                         value={branding.primaryColor}
                         onChange={(e) => setBranding((b) => ({ ...b, primaryColor: e.target.value }))}
-                        className="mt-3 h-11 w-full rounded-xl border border-white/10 bg-slate-950/40 p-1"
+                        className="mt-3 h-11 w-full rounded-xl border border-white/10 bg-slate-950/65 p-1"
                         aria-label="Primary color"
                       />
                     </label>
 
-                    <label className="rounded-2xl border border-white/10 bg-slate-950/25 p-4">
+                    <label className="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
                       <div className="text-sm font-semibold text-white">Secondary color</div>
                       <div className="mt-1 text-xs text-slate-300/85">Used for gradients / highlights</div>
                       <input
                         type="color"
                         value={branding.secondaryColor}
                         onChange={(e) => setBranding((b) => ({ ...b, secondaryColor: e.target.value }))}
-                        className="mt-3 h-11 w-full rounded-xl border border-white/10 bg-slate-950/40 p-1"
+                        className="mt-3 h-11 w-full rounded-xl border border-white/10 bg-slate-950/65 p-1"
                         aria-label="Secondary color"
                       />
                     </label>
                   </div>
 
-                  <div className="mt-3 rounded-2xl border border-white/10 bg-slate-950/25 p-4">
+                  <div className="mt-3 rounded-2xl border border-white/10 bg-slate-950/60 p-4">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div>
                         <div className="text-sm font-semibold text-white">Upload your logo</div>
@@ -632,7 +646,7 @@ export function EstimateYourProject() {
                 {step === 3 ? (
                   <div className="mt-6">
                     <div className="text-sm font-semibold text-slate-100">Additional Services</div>
-                    <div className="mt-3 rounded-2xl border border-white/10 bg-slate-950/25 p-4">
+                    <div className="mt-3 rounded-2xl border border-white/10 bg-slate-950/60 p-4">
                     <label className="block">
                       <div className="text-sm font-semibold text-white">What do you really need?</div>
                       <div className="mt-1 text-xs text-slate-300/85">
@@ -642,7 +656,7 @@ export function EstimateYourProject() {
                         value={projectMessage}
                         onChange={(e) => setProjectMessage(e.target.value)}
                         rows={5}
-                        className="mt-3 w-full resize-y rounded-xl border border-white/10 bg-slate-950/30 px-3 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-400 focus:border-cyan-300/50"
+                        className="mt-3 w-full resize-y rounded-xl border border-white/10 bg-slate-950/60 px-3 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-400 focus:border-cyan-300/50"
                         placeholder="Example: I need a website to present my business, with a booking form, client area, and an admin dashboard…"
                       />
                     </label>
@@ -654,7 +668,7 @@ export function EstimateYourProject() {
                         <select
                           value={stack}
                           onChange={(e) => setStack(e.target.value as StackChoice)}
-                          className="mt-3 h-11 w-full rounded-xl border border-white/10 bg-slate-950/40 px-3 text-sm font-semibold text-slate-100 outline-none focus:border-cyan-300/50 [color-scheme:dark]"
+                          className="mt-3 h-11 w-full rounded-xl border border-white/10 bg-slate-950/65 px-3 text-sm font-semibold text-slate-100 outline-none focus:border-cyan-300/50 [color-scheme:dark]"
                           aria-label="Preferred language or stack"
                         >
                           <option value="Next.js" className="bg-slate-950 text-slate-100">Next.js</option>
@@ -676,7 +690,7 @@ export function EstimateYourProject() {
                     <div className="text-sm font-semibold text-slate-100">Get Estimate</div>
 
                     <div className="mt-3 grid grid-cols-1 gap-3">
-                      <div className="rounded-2xl border border-white/10 bg-slate-950/25 p-4">
+                      <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
                         <div className="text-sm font-semibold text-white">Summary</div>
                         <div className="mt-3 grid grid-cols-1 gap-2 text-sm text-slate-200/85">
                           <div className="flex items-center justify-between gap-3">
@@ -698,13 +712,13 @@ export function EstimateYourProject() {
                         </div>
 
                         {projectMessage.trim() ? (
-                          <div className="mt-3 rounded-xl border border-white/10 bg-slate-950/20 p-3 text-xs text-slate-200/85">
+                          <div className="mt-3 rounded-xl border border-white/10 bg-slate-950/55 p-3 text-xs text-slate-200/85">
                             {projectMessage.trim()}
                           </div>
                         ) : null}
                       </div>
 
-                      <div className="rounded-2xl border border-white/10 bg-slate-950/25 p-4">
+                      <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
                         <div className="text-sm font-semibold text-white">AI Estimator (Real-time)</div>
                         <div className="mt-1 text-xs text-slate-300/85">
                           Adjustment based on pages, options, chosen stack and your message. Final quote is capped at {euros(500)}.
@@ -729,7 +743,7 @@ export function EstimateYourProject() {
                           </div>
                         </div>
 
-                        <div className="mt-4 flex items-center justify-between rounded-xl border border-white/10 bg-slate-950/20 p-3">
+                        <div className="mt-4 flex items-center justify-between rounded-xl border border-white/10 bg-slate-950/55 p-3">
                           <span className="text-sm font-semibold text-slate-100">Final estimate</span>
                           <span className="text-sm font-extrabold text-emerald-200">{formatRangeEuros(estimate.min, estimate.max)}</span>
                         </div>
@@ -747,8 +761,8 @@ export function EstimateYourProject() {
                     disabled={step === 1}
                     className={
                       step === 1
-                        ? "h-11 w-28 rounded-xl border border-white/10 bg-slate-950/15 text-sm font-semibold text-slate-400"
-                        : "h-11 w-28 rounded-xl border border-white/10 bg-slate-950/20 text-sm font-semibold text-slate-100 hover:border-white/15"
+                        ? "h-11 w-28 rounded-xl border border-white/10 bg-slate-950/45 text-sm font-semibold text-slate-400"
+                        : "h-11 w-28 rounded-xl border border-white/10 bg-slate-950/55 text-sm font-semibold text-slate-100 hover:border-white/15"
                     }
                   >
                     Back
@@ -758,7 +772,7 @@ export function EstimateYourProject() {
                     <button
                       type="button"
                       onClick={() => setStep((s) => (s === 4 ? 4 : ((s + 1) as 1 | 2 | 3 | 4)))}
-                      className="h-11 w-32 rounded-xl border border-cyan-300/35 bg-cyan-500/10 text-sm font-semibold text-cyan-50 shadow-[0_0_18px_rgba(34,211,238,0.16)] hover:bg-cyan-500/15"
+                      className="h-11 w-32 rounded-xl border border-cyan-300/35 bg-cyan-500/20 text-sm font-semibold text-cyan-50 shadow-[0_0_18px_rgba(34,211,238,0.16)] hover:bg-cyan-500/25"
                     >
                       Next
                     </button>
@@ -771,7 +785,7 @@ export function EstimateYourProject() {
                         setSendError(null);
                         setSendIssues([]);
                       }}
-                      className="h-11 w-40 rounded-xl border border-emerald-400/35 bg-emerald-500/15 text-sm font-semibold text-emerald-100 shadow-[0_0_18px_rgba(16,185,129,0.20)] hover:bg-emerald-500/20"
+                      className="h-11 w-40 rounded-xl border border-emerald-400/35 bg-emerald-500/25 text-sm font-semibold text-emerald-100 shadow-[0_0_18px_rgba(16,185,129,0.20)] hover:bg-emerald-500/30"
                     >
                       Envoyer le projet
                     </button>
@@ -804,7 +818,7 @@ export function EstimateYourProject() {
                             if (sendPending) return;
                             setSendOpen(false);
                           }}
-                          className="h-10 w-10 rounded-xl border border-white/10 bg-slate-950/30 text-sm font-semibold text-slate-200 hover:border-white/15"
+                          className="h-10 w-10 rounded-xl border border-white/10 bg-slate-950/60 text-sm font-semibold text-slate-200 hover:border-white/15"
                           aria-label="Close"
                         >
                           ✕
@@ -840,7 +854,7 @@ export function EstimateYourProject() {
                         ) : null}
 
                         {sendOk ? (
-                          <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/10 p-3 text-sm text-emerald-200">
+                          <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/20 p-3 text-sm text-emerald-200">
                             Projet envoyé. Je reviens vers vous après étude.
                           </div>
                         ) : null}
@@ -852,7 +866,7 @@ export function EstimateYourProject() {
                               if (sendPending) return;
                               setSendOpen(false);
                             }}
-                            className="h-11 rounded-xl border border-white/10 bg-slate-950/30 px-4 text-sm font-semibold text-slate-100 hover:border-white/15"
+                              className="h-11 rounded-xl border border-white/10 bg-slate-950/60 px-4 text-sm font-semibold text-slate-100 hover:border-white/15"
                           >
                             Annuler
                           </button>
@@ -861,8 +875,8 @@ export function EstimateYourProject() {
                             disabled={sendPending}
                             className={
                               sendPending
-                                ? "h-11 rounded-xl border border-emerald-400/35 bg-emerald-500/10 px-4 text-sm font-semibold text-emerald-200/70"
-                                : "h-11 rounded-xl border border-emerald-400/35 bg-emerald-500/15 px-4 text-sm font-semibold text-emerald-100 shadow-[0_0_18px_rgba(16,185,129,0.20)] hover:bg-emerald-500/20"
+                                ? "h-11 rounded-xl border border-emerald-400/35 bg-emerald-500/20 px-4 text-sm font-semibold text-emerald-200/70"
+                                : "h-11 rounded-xl border border-emerald-400/35 bg-emerald-500/25 px-4 text-sm font-semibold text-emerald-100 shadow-[0_0_18px_rgba(16,185,129,0.20)] hover:bg-emerald-500/30"
                             }
                           >
                             {sendPending ? "Envoi…" : "Envoyer"}
@@ -875,7 +889,7 @@ export function EstimateYourProject() {
               </div>
             </div>
 
-            <aside className="relative border-t border-white/10 bg-slate-950/55 p-4 lg:col-span-4 lg:border-l lg:border-t-0 lg:p-6">
+            <aside className="relative border-t border-white/10 bg-slate-950/70 p-4 lg:col-span-4 lg:border-l lg:border-t-0 lg:p-6">
               <div className="pointer-events-none absolute inset-0">
                 <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-emerald-500/10 blur-3xl" />
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-400/25 to-transparent" />
@@ -889,10 +903,10 @@ export function EstimateYourProject() {
                 </div>
 
                 <div className="mt-2 flex items-center gap-2 text-xs font-semibold text-slate-300/90">
-                  <span className="inline-flex items-center rounded-full border border-white/10 bg-slate-950/30 px-2.5 py-1">Delivery: 7–14 Days</span>
+                  <span className="inline-flex items-center rounded-full border border-white/10 bg-slate-950/60 px-2.5 py-1">Delivery: 7–14 Days</span>
                 </div>
 
-                <div className="mt-5 rounded-2xl border border-white/10 bg-slate-950/30 p-4">
+                <div className="mt-5 rounded-2xl border border-white/10 bg-slate-950/60 p-4">
                   <div className="text-sm font-semibold text-slate-100">Included</div>
                   <ul className="mt-3 space-y-2 text-sm text-slate-200/85">
                     {["Responsive Design", "SSL Certificate", "SEO Optimized", "Fast Loading", "1 Month Support"].map((item) => (
@@ -905,7 +919,7 @@ export function EstimateYourProject() {
 
                   <Link
                     href="/contact"
-                    className="mt-5 inline-flex h-12 w-full items-center justify-center rounded-xl border border-emerald-400/45 bg-emerald-500/15 px-6 text-sm font-semibold text-emerald-100 shadow-[0_0_18px_rgba(16,185,129,0.28)] hover:bg-emerald-500/25"
+                    className="mt-5 inline-flex h-12 w-full items-center justify-center rounded-xl border border-emerald-400/45 bg-emerald-500/25 px-6 text-sm font-semibold text-emerald-100 shadow-[0_0_18px_rgba(16,185,129,0.28)] hover:bg-emerald-500/35"
                   >
                     Get Free Quote
                   </Link>

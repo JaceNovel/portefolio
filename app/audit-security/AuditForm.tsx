@@ -45,7 +45,7 @@ export function AuditForm() {
 
   if (ok) {
     return (
-      <div className="rounded-xl border border-emerald-400/35 bg-emerald-500/10 p-4">
+      <div className="rounded-xl border border-emerald-400/35 bg-emerald-500/20 p-4">
         <div className="text-sm font-semibold text-emerald-100">Request sent</div>
         <p className="mt-1 text-sm leading-6 text-emerald-50/90">You may receive a confirmation email if emailing is configured.</p>
       </div>

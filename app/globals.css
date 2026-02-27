@@ -12,27 +12,69 @@ body {
   background-image: url("/WhatsApp%20Image%202026-02-27%20at%2001.12.44.jpeg");
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
   background-attachment: fixed;
 }
 
 .site-zoom-content {
-  zoom: 0.9;
+  zoom: 1;
 }
 
 .login-page-boost {
-  zoom: 1.111111;
+  zoom: 1;
+}
+
+.login-page-bg {
+  background-color: transparent;
+  background-image: url("/WhatsApp%20Image%202026-02-27%20at%2001.12.44%20(1).jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+}
+
+.admin-page-bg {
+  background-color: transparent;
+  background-image: url("/WhatsApp%20Image%202026-02-27%20at%2001.12.44.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+@media (min-width: 640px) {
+  .site-zoom-content {
+    zoom: 0.9;
+  }
+
+  .login-page-boost {
+    zoom: 1.111111;
+  }
 }
 
 @supports not (zoom: 1) {
   .site-zoom-content {
-    width: 111.111111%;
-    transform: scale(0.9);
+    width: 100%;
+    transform: none;
     transform-origin: top left;
   }
 
   .login-page-boost {
-    transform: scale(1.111111);
+    transform: none;
     transform-origin: top center;
+  }
+
+  @media (min-width: 640px) {
+    .site-zoom-content {
+      width: 111.111111%;
+      transform: scale(0.9);
+      transform-origin: top left;
+    }
+
+    .login-page-boost {
+      transform: scale(1.111111);
+      transform-origin: top center;
+    }
   }
 }
 
@@ -49,26 +91,17 @@ body {
 }
 
 .home-cyber-bg {
-  background-color: rgb(2 6 23);
-  background-image:
-    linear-gradient(180deg, rgba(2, 6, 23, 0.58) 0%, rgba(2, 10, 30, 0.72) 45%, rgba(2, 8, 24, 0.8) 100%),
-    url("/WhatsApp%20Image%202026-02-27%20at%2001.12.44.jpeg"),
-    radial-gradient(circle at 50% 10%, rgba(37, 99, 235, 0.45), transparent 30%),
-    radial-gradient(circle at 0% 80%, rgba(6, 182, 212, 0.18), transparent 32%),
-    radial-gradient(circle at 100% 85%, rgba(16, 185, 129, 0.14), transparent 30%),
-    linear-gradient(180deg, rgba(2, 6, 23, 1) 0%, rgba(2, 10, 30, 1) 38%, rgba(2, 8, 24, 1) 100%);
-  background-size: cover, cover, auto, auto, auto, auto;
-  background-position: center, center, center, center, center, center;
-  background-attachment: fixed, fixed, scroll, scroll, scroll, scroll;
+  background-color: transparent;
+  background-image: none;
 }
 
 .web-design-no-bg {
-  background-color: rgb(2 6 23);
-  background-image:
-    radial-gradient(circle at 50% 10%, rgba(37, 99, 235, 0.45), transparent 30%),
-    radial-gradient(circle at 0% 80%, rgba(6, 182, 212, 0.18), transparent 32%),
-    radial-gradient(circle at 100% 85%, rgba(16, 185, 129, 0.14), transparent 30%),
-    linear-gradient(180deg, rgba(2, 6, 23, 1) 0%, rgba(2, 10, 30, 1) 38%, rgba(2, 8, 24, 1) 100%);
+  background-color: transparent;
+  background-image: url("/WhatsApp%20Image%202026-02-27%20at%2001.12.44%20(1).jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 

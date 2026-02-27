@@ -22,7 +22,7 @@ export default async function ResetPasswordPage() {
       <h1 className="text-2xl font-semibold tracking-tight text-white">Changer le mot de passe</h1>
       <p className="mt-2 text-sm text-slate-300">{client.name} • {client.email}</p>
 
-      <div className="mt-6 rounded-3xl border border-slate-800/70 bg-slate-950/40 p-5">
+      <div className="mt-6 rounded-3xl border border-slate-800/70 bg-slate-950/70 p-5">
         <ResetPasswordForm />
       </div>
     </main>

@@ -12,16 +12,16 @@ export type QuoteOptions = {
 
 const pricing = {
   baseCents: {
-    vitrine: 80000,
-    ecommerce: 160000,
-    "sur-mesure": 220000,
+    vitrine: 48000,
+    ecommerce: 96000,
+    "sur-mesure": 132000,
   } satisfies Record<SiteType, number>,
-  perPageCents: 12000,
+  perPageCents: 7200,
   optionsCents: {
-    blog: 25000,
-    paiement: 45000,
-    espaceMembre: 60000,
-    maintenance: 20000,
+    blog: 15000,
+    paiement: 27000,
+    espaceMembre: 36000,
+    maintenance: 12000,
   } satisfies Record<keyof QuoteOptions, number>,
 } as const;
 

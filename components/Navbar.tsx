@@ -25,7 +25,7 @@ export function Navbar() {
     <header className="sticky top-0 z-50 border-b border-slate-800/60 bg-gradient-to-b from-slate-950/95 via-slate-950/80 to-slate-950/95 backdrop-blur-xl">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
         <nav className="flex min-h-16 items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-3">
+          <Link href="/" className="flex min-w-0 items-center gap-3">
             <span className="inline-flex items-center justify-center">
               <Image
                 src="https://img.icons8.com/?size=188&id=28kzIB2E5Rat&format=png"
@@ -36,7 +36,7 @@ export function Navbar() {
                 priority
               />
             </span>
-            <span className="text-lg font-bold tracking-tight text-white sm:text-xl">
+            <span className="truncate text-base font-bold tracking-tight text-white sm:text-xl">
               Jonadab <span className="text-fuchsia-400">AMAH</span>
             </span>
           </Link>
@@ -91,10 +91,28 @@ export function Navbar() {
           </div>
         </nav>
 
+        <div className="lg:hidden">
+          <div className="-mx-4 flex items-center gap-2 overflow-x-auto px-4 pb-2 pt-1 sm:-mx-6 sm:px-6">
+            {links.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={`whitespace-nowrap rounded-full border px-3 py-1.5 text-sm font-medium transition ${
+                  isActiveLink(l.href)
+                    ? "border-cyan-300/45 bg-cyan-500/10 text-cyan-100"
+                    : "border-slate-700/60 bg-slate-900/20 text-slate-200 hover:border-cyan-300/35 hover:text-white"
+                }`}
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+
         <div className="pb-3">
           <Link
             href="/audit-security"
-            className="mx-auto flex h-12 w-full max-w-4xl items-center justify-center rounded-md border border-fuchsia-300/30 bg-gradient-to-r from-fuchsia-500/35 via-blue-500/35 to-violet-500/35 text-sm font-semibold text-cyan-100 shadow-[0_0_28px_rgba(139,92,246,0.35)]"
+            className="mx-auto flex min-h-12 w-full max-w-4xl items-center justify-center rounded-md border border-fuchsia-300/30 bg-gradient-to-r from-fuchsia-500/35 via-blue-500/35 to-violet-500/35 px-3 py-2 text-center text-sm font-semibold leading-snug text-cyan-100 shadow-[0_0_28px_rgba(139,92,246,0.35)]"
           >
             ⚡ Request your free security audit
           </Link>

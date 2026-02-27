@@ -17,7 +17,7 @@ type ServiceCardProps = {
 
 function ServiceCard({ title, imageUrl, imageAlt, bullets }: ServiceCardProps) {
   return (
-    <article className="group relative overflow-hidden rounded-2xl border border-cyan-400/15 bg-slate-950/45 shadow-[0_0_26px_rgba(14,165,233,0.10)]">
+    <article className="group relative overflow-hidden rounded-2xl border border-cyan-400/15 bg-slate-950/70 shadow-[0_0_26px_rgba(14,165,233,0.10)]">
       <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
         <div className="absolute -left-24 -top-24 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl" />
         <div className="absolute -bottom-28 -right-28 h-72 w-72 rounded-full bg-emerald-500/10 blur-3xl" />
@@ -76,11 +76,6 @@ export default function WebDesignPage() {
 
   return (
     <main className="web-design-no-bg relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 opacity-70 [background-image:radial-gradient(circle_at_20%_20%,rgba(34,211,238,0.18),transparent_45%),radial-gradient(circle_at_80%_25%,rgba(59,130,246,0.20),transparent_42%),radial-gradient(circle_at_60%_90%,rgba(16,185,129,0.12),transparent_46%)]" />
-        <div className="absolute inset-0 opacity-35 [background-image:radial-gradient(rgba(148,163,184,0.22)_1px,transparent_1px)] [background-size:28px_28px]" />
-      </div>
-
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
         <div className="relative text-xs text-slate-300 sm:text-sm">
           <Link href="/" className="hover:text-white">

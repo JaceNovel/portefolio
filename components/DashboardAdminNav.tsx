@@ -19,7 +19,7 @@ export function DashboardAdminNav() {
   };
 
   return (
-    <nav className="mt-4 flex items-center gap-8">
+    <nav className="mt-4 flex flex-wrap items-center gap-4">
       {adminLinks.map((link) => (
         <Link
           key={link.href}

@@ -72,60 +72,95 @@ export default async function DashboardAdminPage() {
   const admin = await requireAdmin();
   if (!admin) redirect("/dashboard-admin/login");
 
+  let clientRequestsCount = 0;
+  let pendingAuditsCount = 0;
+  let webProjectsCount = 0;
+  let publishedBlogPostsCount = 0;
+  let recentClientRequests: RecentClientRequestItem[] = [];
+  let openAudits: OpenAuditItem[] = [];
+  let latestProjects: LatestProjectItem[] = [];
+  let latestBlogPosts: LatestBlogPostItem[] = [];
+  let dataLoadFailed = false;
+
   try {
-  const [
-    clientRequestsCount,
-    pendingAuditsCount,
-    webProjectsCount,
-    publishedBlogPostsCount,
-    recentClientRequests,
-    openAudits,
-    latestProjects,
-    latestBlogPosts,
-  ]: [number, number, number, number, RecentClientRequestItem[], OpenAuditItem[], LatestProjectItem[], LatestBlogPostItem[]] =
-    await Promise.all([
-    prisma.projectRequest.count(),
-    prisma.securityAuditRequest.count({ where: { status: { not: "Terminé" } } }),
-    prisma.webProject.count(),
-    prisma.blogPost.count({ where: { published: true } }),
-    prisma.projectRequest.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 4,
-      select: {
-        id: true,
-        name: true,
-        budget: true,
-        estimateCents: true,
-        source: true,
-        requestType: true,
-        siteType: true,
-      },
-    }),
-    prisma.securityAuditRequest.findMany({
-      where: { status: { not: "Terminé" } },
-      orderBy: { createdAt: "desc" },
-      take: 4,
-      select: { id: true, websiteUrl: true, createdAt: true, status: true },
-    }),
-    prisma.webProject.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 3,
-      select: { id: true, title: true, imageUrl: true },
-    }),
-    prisma.blogPost.findMany({
-      where: { published: true },
-      orderBy: { createdAt: "desc" },
-      take: 2,
-      select: { id: true, title: true, excerpt: true, createdAt: true },
-    }),
-  ]);
+    const results: [
+      number,
+      number,
+      number,
+      number,
+      RecentClientRequestItem[],
+      OpenAuditItem[],
+      LatestProjectItem[],
+      LatestBlogPostItem[],
+    ] = await Promise.all([
+      prisma.projectRequest.count(),
+      prisma.securityAuditRequest.count({ where: { status: { not: "Terminé" } } }),
+      prisma.webProject.count(),
+      prisma.blogPost.count({ where: { published: true } }),
+      prisma.projectRequest.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 4,
+        select: {
+          id: true,
+          name: true,
+          budget: true,
+          estimateCents: true,
+          source: true,
+          requestType: true,
+          siteType: true,
+        },
+      }),
+      prisma.securityAuditRequest.findMany({
+        where: { status: { not: "Terminé" } },
+        orderBy: { createdAt: "desc" },
+        take: 4,
+        select: { id: true, websiteUrl: true, createdAt: true, status: true },
+      }),
+      prisma.webProject.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 3,
+        select: { id: true, title: true, imageUrl: true },
+      }),
+      prisma.blogPost.findMany({
+        where: { published: true },
+        orderBy: { createdAt: "desc" },
+        take: 2,
+        select: { id: true, title: true, excerpt: true, createdAt: true },
+      }),
+    ]);
+
+    [
+      clientRequestsCount,
+      pendingAuditsCount,
+      webProjectsCount,
+      publishedBlogPostsCount,
+      recentClientRequests,
+      openAudits,
+      latestProjects,
+      latestBlogPosts,
+    ] = results;
+  } catch {
+    dataLoadFailed = true;
+  }
+
+  if (dataLoadFailed) {
+    return (
+      <main className="admin-page-bg relative min-h-[calc(100vh-4rem)] overflow-hidden px-4 py-10 sm:px-6">
+        <div className="mx-auto w-full max-w-3xl rounded-2xl border border-red-500/30 bg-red-500/10 p-6 text-red-100">
+          <h1 className="text-2xl font-semibold">Dashboard indisponible</h1>
+          <p className="mt-3 text-sm leading-6">
+            Une erreur serveur est survenue en chargeant les données admin. Vérifiez la configuration de la base de données sur Vercel puis
+            réessayez.
+          </p>
+        </div>
+      </main>
+    );
+  }
 
   return (
-    <main className="home-cyber-bg relative min-h-[calc(100vh-4rem)] overflow-hidden px-4 py-6 sm:px-6">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_35%,rgba(6,182,212,0.18),transparent_42%),radial-gradient(circle_at_85%_18%,rgba(59,130,246,0.2),transparent_44%),radial-gradient(circle_at_78%_86%,rgba(16,185,129,0.14),transparent_38%)]" />
-
+    <main className="admin-page-bg relative min-h-[calc(100vh-4rem)] overflow-hidden px-4 py-6 sm:px-6">
       <div className="relative mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-6 lg:grid-cols-[260px_1fr]">
-        <aside className="rounded-2xl border border-cyan-400/20 bg-slate-950/55 shadow-[0_0_35px_rgba(14,165,233,0.12)] backdrop-blur-lg">
+        <aside className="rounded-2xl border border-cyan-400/20 bg-slate-950/80 shadow-[0_0_35px_rgba(14,165,233,0.12)] backdrop-blur-lg">
           <div className="border-b border-cyan-500/20 px-5 py-5">
             <h2 className="text-2xl font-semibold text-white">
               <span className="text-cyan-300">Jonadab</span> AMAH
@@ -133,27 +168,27 @@ export default async function DashboardAdminPage() {
           </div>
 
           <nav className="space-y-1 px-3 py-4">
-            <a href="#" className="flex items-center gap-3 rounded-xl bg-cyan-500/10 px-3 py-2.5 text-sm font-semibold text-cyan-100 ring-1 ring-inset ring-cyan-500/35">
+            <a href="#" className="flex items-center gap-3 rounded-xl bg-cyan-500/20 px-3 py-2.5 text-sm font-semibold text-cyan-100 ring-1 ring-inset ring-cyan-500/35">
               <FiBarChart2 className="h-4 w-4" aria-hidden="true" />
               Dashboard
             </a>
-            <a href="#requests" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-200 transition hover:bg-slate-900/60">
+            <a href="#requests" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-200 transition hover:bg-slate-900/80">
               <FiClipboard className="h-4 w-4" aria-hidden="true" />
               Client Requests
             </a>
-            <a href="#audits" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-200 transition hover:bg-slate-900/60">
+            <a href="#audits" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-200 transition hover:bg-slate-900/80">
               <FiShield className="h-4 w-4" aria-hidden="true" />
               Security Audits
             </a>
-            <a href="#projects" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-200 transition hover:bg-slate-900/60">
+            <a href="#projects" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-200 transition hover:bg-slate-900/80">
               <FiGlobe className="h-4 w-4" aria-hidden="true" />
               Web Projects
             </a>
-            <a href="#blog" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-200 transition hover:bg-slate-900/60">
+            <a href="#blog" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-200 transition hover:bg-slate-900/80">
               <FiBookOpen className="h-4 w-4" aria-hidden="true" />
               Blog Posts
             </a>
-            <a href="#" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-200 transition hover:bg-slate-900/60">
+            <a href="#" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-200 transition hover:bg-slate-900/80">
               <FiUser className="h-4 w-4" aria-hidden="true" />
               Clients
             </a>
@@ -161,15 +196,15 @@ export default async function DashboardAdminPage() {
         </aside>
 
         <section className="space-y-5">
-          <div className="flex flex-col gap-3 rounded-2xl border border-cyan-400/20 bg-slate-950/50 px-5 py-4 shadow-[0_0_28px_rgba(14,165,233,0.1)] sm:flex-row sm:items-center sm:justify-between">
-            <h1 className="text-3xl font-semibold text-white">Dashboard</h1>
+          <div className="flex flex-col gap-3 rounded-2xl border border-cyan-400/20 bg-slate-950/75 px-5 py-4 shadow-[0_0_28px_rgba(14,165,233,0.1)] sm:flex-row sm:items-center sm:justify-between">
+            <h1 className="text-2xl font-semibold text-white sm:text-3xl">Dashboard</h1>
 
             <div className="flex items-center gap-3">
               <div className="hidden h-10 min-w-60 items-center rounded-xl border border-cyan-500/20 bg-slate-900/70 px-3 text-sm text-slate-300 md:flex">
                 Search...
               </div>
               <form action={adminLogoutAction}>
-                <button type="submit" className="inline-flex h-10 items-center gap-2 rounded-xl border border-cyan-400/30 bg-cyan-500/10 px-3 text-sm font-medium text-cyan-100 transition hover:bg-cyan-500/20">
+                <button type="submit" className="inline-flex h-10 items-center gap-2 rounded-xl border border-cyan-400/30 bg-cyan-500/20 px-3 text-sm font-medium text-cyan-100 transition hover:bg-cyan-500/30">
                   <FiMail className="h-4 w-4" aria-hidden="true" />
                   Logout
                 </button>
@@ -178,7 +213,7 @@ export default async function DashboardAdminPage() {
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <article className="rounded-2xl border border-cyan-400/25 bg-slate-950/55 p-4 shadow-[0_0_20px_rgba(34,211,238,0.12)]">
+            <article className="rounded-2xl border border-cyan-400/25 bg-slate-950/80 p-4 shadow-[0_0_20px_rgba(34,211,238,0.12)]">
               <div className="flex items-center justify-between text-cyan-200">
                 <FiClipboard className="h-6 w-6" aria-hidden="true" />
                 <span className="text-3xl font-semibold text-white">{clientRequestsCount}</span>
@@ -186,7 +221,7 @@ export default async function DashboardAdminPage() {
               <p className="mt-3 text-sm text-slate-200">Client Requests</p>
             </article>
 
-            <article className="rounded-2xl border border-emerald-400/25 bg-slate-950/55 p-4 shadow-[0_0_20px_rgba(16,185,129,0.12)]">
+            <article className="rounded-2xl border border-emerald-400/25 bg-slate-950/80 p-4 shadow-[0_0_20px_rgba(16,185,129,0.12)]">
               <div className="flex items-center justify-between text-emerald-200">
                 <FiShield className="h-6 w-6" aria-hidden="true" />
                 <span className="text-3xl font-semibold text-white">{pendingAuditsCount}</span>
@@ -194,7 +229,7 @@ export default async function DashboardAdminPage() {
               <p className="mt-3 text-sm text-slate-200">Pending Audits</p>
             </article>
 
-            <article className="rounded-2xl border border-cyan-400/25 bg-slate-950/55 p-4 shadow-[0_0_20px_rgba(34,211,238,0.12)]">
+            <article className="rounded-2xl border border-cyan-400/25 bg-slate-950/80 p-4 shadow-[0_0_20px_rgba(34,211,238,0.12)]">
               <div className="flex items-center justify-between text-cyan-200">
                 <FiGlobe className="h-6 w-6" aria-hidden="true" />
                 <span className="text-3xl font-semibold text-white">{webProjectsCount}</span>
@@ -202,7 +237,7 @@ export default async function DashboardAdminPage() {
               <p className="mt-3 text-sm text-slate-200">Web Projects</p>
             </article>
 
-            <article className="rounded-2xl border border-cyan-400/25 bg-slate-950/55 p-4 shadow-[0_0_20px_rgba(34,211,238,0.12)]">
+            <article className="rounded-2xl border border-cyan-400/25 bg-slate-950/80 p-4 shadow-[0_0_20px_rgba(34,211,238,0.12)]">
               <div className="flex items-center justify-between text-cyan-200">
                 <FiFileText className="h-6 w-6" aria-hidden="true" />
                 <span className="text-3xl font-semibold text-white">{publishedBlogPostsCount}</span>
@@ -212,11 +247,11 @@ export default async function DashboardAdminPage() {
           </div>
 
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-            <article id="requests" className="rounded-2xl border border-cyan-400/20 bg-slate-950/55 p-4">
+            <article id="requests" className="rounded-2xl border border-cyan-400/20 bg-slate-950/80 p-4">
               <h2 className="text-2xl font-semibold text-white">Recent Client Requests</h2>
-              <div className="mt-4 overflow-hidden rounded-xl border border-slate-800/80">
-                <table className="w-full text-left text-sm">
-                  <thead className="bg-slate-900/70 text-slate-300">
+              <div className="mt-4 overflow-x-auto rounded-xl border border-slate-800/80">
+                <table className="min-w-[520px] w-full text-left text-sm">
+                  <thead className="bg-slate-900/85 text-slate-300">
                     <tr>
                       <th className="px-3 py-2 font-medium">Scope</th>
                       <th className="px-3 py-2 font-medium">Client</th>
@@ -226,8 +261,8 @@ export default async function DashboardAdminPage() {
                   <tbody>
                     {recentClientRequests.map((item: RecentClientRequestItem) => (
                       <tr key={item.id} className="border-t border-slate-800/70 text-slate-100">
-                        <td className="px-3 py-2">{getScopeLabel(item)}</td>
-                        <td className="px-3 py-2">{item.name}</td>
+                        <td className="px-3 py-2 align-top break-words">{getScopeLabel(item)}</td>
+                        <td className="px-3 py-2 align-top break-words">{item.name}</td>
                         <td className="px-3 py-2">
                           <span className="rounded-md bg-cyan-500/15 px-2 py-1 text-cyan-200">{formatBudgetLabel(item)}</span>
                         </td>
@@ -247,8 +282,8 @@ export default async function DashboardAdminPage() {
 
             <article id="audits" className="rounded-2xl border border-cyan-400/20 bg-slate-950/55 p-4">
               <h2 className="text-2xl font-semibold text-white">Open Security Audits</h2>
-              <div className="mt-4 overflow-hidden rounded-xl border border-slate-800/80">
-                <table className="w-full text-left text-sm">
+              <div className="mt-4 overflow-x-auto rounded-xl border border-slate-800/80">
+                <table className="min-w-[560px] w-full text-left text-sm">
                   <thead className="bg-slate-900/70 text-slate-300">
                     <tr>
                       <th className="px-3 py-2 font-medium">Domain</th>
@@ -259,7 +294,7 @@ export default async function DashboardAdminPage() {
                   <tbody>
                     {openAudits.map((audit: OpenAuditItem) => (
                       <tr key={audit.id} className="border-t border-slate-800/70 text-slate-100">
-                        <td className="px-3 py-2">{audit.websiteUrl}</td>
+                        <td className="px-3 py-2 align-top break-all">{audit.websiteUrl}</td>
                         <td className="px-3 py-2">{formatDateLabel(audit.createdAt)}</td>
                         <td className="px-3 py-2">
                           <span className="rounded-md bg-emerald-500/15 px-2 py-1 text-emerald-200">{audit.status}</span>
@@ -317,17 +352,4 @@ export default async function DashboardAdminPage() {
       </div>
     </main>
   );
-  } catch {
-    return (
-      <main className="home-cyber-bg relative min-h-[calc(100vh-4rem)] overflow-hidden px-4 py-10 sm:px-6">
-        <div className="mx-auto w-full max-w-3xl rounded-2xl border border-red-500/30 bg-red-500/10 p-6 text-red-100">
-          <h1 className="text-2xl font-semibold">Dashboard indisponible</h1>
-          <p className="mt-3 text-sm leading-6">
-            Une erreur serveur est survenue en chargeant les données admin. Vérifiez la configuration de la base de données
-            sur Vercel puis réessayez.
-          </p>
-        </div>
-      </main>
-    );
-  }
 }

@@ -45,7 +45,7 @@ export default function AboutPage() {
 
         <section className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-[2fr_1fr]">
           <div className="space-y-5">
-            <article className="rounded-2xl border border-cyan-400/20 bg-slate-950/55 p-4 shadow-[0_0_20px_rgba(14,165,233,0.13)]">
+            <article className="rounded-2xl border border-cyan-400/20 bg-slate-950/80 p-4 shadow-[0_0_20px_rgba(14,165,233,0.13)]">
               <div className="flex items-center gap-2 text-xl font-semibold text-white">
                 <FiUser className="text-cyan-300" />
                 <span>My Journey</span>
@@ -53,7 +53,7 @@ export default function AboutPage() {
               <div className="mt-3 space-y-2.5">
                 {journey.map((item) => (
                   <div key={item.year} className="flex items-center gap-3 border-b border-slate-800/70 pb-2.5">
-                    <span className="rounded-md border border-emerald-400/35 bg-emerald-500/15 px-2.5 py-1 text-xs font-semibold text-emerald-300 sm:text-sm">{item.year}</span>
+                    <span className="rounded-md border border-emerald-400/35 bg-emerald-500/25 px-2.5 py-1 text-xs font-semibold text-emerald-300 sm:text-sm">{item.year}</span>
                     <span className="text-base text-slate-100 sm:text-lg">{item.text}</span>
                   </div>
                 ))}
@@ -67,24 +67,24 @@ export default function AboutPage() {
               </div>
 
               <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-                <div className="rounded-2xl border border-emerald-400/25 bg-slate-950/55 p-4 text-center shadow-[0_0_18px_rgba(16,185,129,0.14)]">
-                  <div className="mx-auto w-fit rounded-xl border border-emerald-400/35 bg-emerald-500/15 p-2.5 text-xl text-emerald-300">
+                <div className="rounded-2xl border border-emerald-400/25 bg-slate-950/80 p-4 text-center shadow-[0_0_18px_rgba(16,185,129,0.14)]">
+                  <div className="mx-auto w-fit rounded-xl border border-emerald-400/35 bg-emerald-500/25 p-2.5 text-xl text-emerald-300">
                     <SiHackthebox />
                   </div>
                   <h3 className="mt-2.5 text-lg font-semibold text-white">Pentest & Red Team</h3>
                   <p className="mt-1.5 text-sm text-slate-300 sm:text-base">Master ethical hacking & penetration testing</p>
                 </div>
 
-                <div className="rounded-2xl border border-cyan-400/25 bg-slate-950/55 p-4 text-center shadow-[0_0_18px_rgba(34,211,238,0.14)]">
-                  <div className="mx-auto w-fit rounded-xl border border-cyan-400/35 bg-cyan-500/15 p-2.5 text-xl text-cyan-300">
+                <div className="rounded-2xl border border-cyan-400/25 bg-slate-950/80 p-4 text-center shadow-[0_0_18px_rgba(34,211,238,0.14)]">
+                  <div className="mx-auto w-fit rounded-xl border border-cyan-400/35 bg-cyan-500/25 p-2.5 text-xl text-cyan-300">
                     <SiSplunk />
                   </div>
                   <h3 className="mt-2.5 text-lg font-semibold text-white">SOC Analyst</h3>
                   <p className="mt-1.5 text-sm text-slate-300 sm:text-base">Monitor & protect systems 24/7</p>
                 </div>
 
-                <div className="rounded-2xl border border-fuchsia-400/25 bg-slate-950/55 p-4 text-center shadow-[0_0_18px_rgba(168,85,247,0.14)]">
-                  <div className="mx-auto w-fit rounded-xl border border-fuchsia-400/35 bg-fuchsia-500/15 p-2.5 text-xl text-fuchsia-300">
+                <div className="rounded-2xl border border-fuchsia-400/25 bg-slate-950/80 p-4 text-center shadow-[0_0_18px_rgba(168,85,247,0.14)]">
+                  <div className="mx-auto w-fit rounded-xl border border-fuchsia-400/35 bg-fuchsia-500/25 p-2.5 text-xl text-fuchsia-300">
                     <SiGithubactions />
                   </div>
                   <h3 className="mt-2.5 text-lg font-semibold text-white">DevSecOps</h3>
@@ -95,7 +95,7 @@ export default function AboutPage() {
           </div>
 
           <aside className="space-y-5">
-            <article className="rounded-2xl border border-cyan-400/25 bg-slate-950/60 p-3.5 shadow-[0_0_20px_rgba(14,165,233,0.16)]">
+            <article className="rounded-2xl border border-cyan-400/25 bg-slate-950/85 p-3.5 shadow-[0_0_20px_rgba(14,165,233,0.16)]">
               <div className="overflow-hidden rounded-xl border border-cyan-400/20">
                 <div className="relative aspect-[4/3] w-full">
                   <Image
@@ -112,19 +112,19 @@ export default function AboutPage() {
               <p className="mt-1 text-lg text-cyan-300">Cybersecurity Student @ YNOV</p>
 
               <div className="mt-3 flex gap-2">
-                <a href="#" className="rounded-md border border-slate-700 bg-slate-900/60 p-1.5 text-slate-100">
+                <a href="#" className="rounded-md border border-slate-700 bg-slate-900/80 p-1.5 text-slate-100">
                   <SiLinkedin />
                 </a>
-                <a href="#" className="rounded-md border border-slate-700 bg-slate-900/60 p-1.5 text-slate-100">
+                <a href="#" className="rounded-md border border-slate-700 bg-slate-900/80 p-1.5 text-slate-100">
                   <SiGithub />
                 </a>
-                <a href="mailto:contact@example.com" className="rounded-md border border-slate-700 bg-slate-900/60 p-1.5 text-slate-100">
+                <a href="mailto:contact@example.com" className="rounded-md border border-slate-700 bg-slate-900/80 p-1.5 text-slate-100">
                   <SiMinutemailer />
                 </a>
               </div>
             </article>
 
-            <article className="rounded-2xl border border-cyan-400/20 bg-slate-950/55 p-4 shadow-[0_0_20px_rgba(14,165,233,0.14)]">
+            <article className="rounded-2xl border border-cyan-400/20 bg-slate-950/80 p-4 shadow-[0_0_20px_rgba(14,165,233,0.14)]">
               <h3 className="text-xl font-semibold text-white">My Values</h3>
               <div className="mt-3 space-y-3.5">
                 {values.map((v) => (

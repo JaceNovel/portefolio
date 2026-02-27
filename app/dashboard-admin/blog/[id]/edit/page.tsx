@@ -67,26 +67,26 @@ export default function DashboardAdminEditPostPage() {
 
   if (loading) {
     return (
-      <main className="mx-auto w-full max-w-3xl px-4 py-10 sm:py-14">
-        <div className="rounded-2xl border border-slate-800/70 bg-slate-950/40 p-5 text-sm text-slate-300">Chargement…</div>
+      <main className="admin-page-bg mx-auto min-h-[calc(100vh-4rem)] w-full max-w-3xl px-4 py-10 sm:py-14">
+        <div className="rounded-2xl border border-slate-800/70 bg-slate-950/70 p-5 text-sm text-slate-300">Chargement…</div>
       </main>
     );
   }
 
   if (!post) {
     return (
-      <main className="mx-auto w-full max-w-3xl px-4 py-10 sm:py-14">
+      <main className="admin-page-bg mx-auto min-h-[calc(100vh-4rem)] w-full max-w-3xl px-4 py-10 sm:py-14">
         <DashboardAdminNav />
-        <div className="mt-6 rounded-2xl border border-slate-800/70 bg-slate-950/40 p-5 text-sm text-slate-300">Article introuvable.</div>
+        <div className="mt-6 rounded-2xl border border-slate-800/70 bg-slate-950/70 p-5 text-sm text-slate-300">Article introuvable.</div>
       </main>
     );
   }
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-10 sm:py-14">
+    <main className="admin-page-bg mx-auto min-h-[calc(100vh-4rem)] w-full max-w-3xl px-4 py-10 sm:py-14">
       <DashboardAdminNav />
       <h1 className="mt-4 text-2xl font-semibold tracking-tight text-white">Éditer l’article</h1>
-      <div className="mt-6 rounded-3xl border border-slate-800/70 bg-slate-950/40 p-5">
+      <div className="mt-6 rounded-3xl border border-slate-800/70 bg-slate-950/70 p-5">
         <form
           onSubmit={(e) => {
             e.preventDefault();

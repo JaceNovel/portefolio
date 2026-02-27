@@ -42,7 +42,7 @@ export function CreateWebsiteCta() {
         <button
           type="button"
           onClick={onClick}
-          className="mt-6 inline-flex h-14 w-full max-w-md items-center justify-center rounded-2xl border border-cyan-300/35 bg-cyan-500/15 px-8 text-base font-semibold text-cyan-50 shadow-[0_0_22px_rgba(34,211,238,0.25)] transition hover:bg-cyan-500/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/50 sm:h-16 sm:text-lg"
+          className="mt-6 inline-flex h-14 w-full max-w-md items-center justify-center rounded-2xl border border-cyan-300/35 bg-cyan-500/25 px-8 text-base font-semibold text-cyan-50 shadow-[0_0_22px_rgba(34,211,238,0.25)] transition hover:bg-cyan-500/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/50 sm:h-16 sm:text-lg"
           aria-controls="creer-site-estimate"
           aria-expanded={open}
         >

@@ -40,12 +40,9 @@ export default function ClientAreaLoginPage() {
   }
 
   return (
-    <main className="login-page-boost relative isolate overflow-hidden px-4 py-10 sm:py-14">
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-slate-950" />
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(14,165,233,0.3),transparent_42%),radial-gradient(circle_at_0%_85%,rgba(37,99,235,0.25),transparent_38%),radial-gradient(circle_at_100%_80%,rgba(14,116,144,0.25),transparent_40%)]" />
-
+    <main className="login-page-boost login-page-bg relative isolate min-h-screen overflow-hidden px-4 py-10 sm:py-14">
       <div className="mx-auto w-full max-w-xl">
-        <section className="rounded-3xl border border-cyan-500/20 bg-slate-950/45 p-6 shadow-[0_0_70px_rgba(8,145,178,0.18)] backdrop-blur-md sm:p-8">
+        <section className="rounded-3xl border border-cyan-500/20 bg-slate-950/75 p-6 shadow-[0_0_70px_rgba(8,145,178,0.18)] backdrop-blur-md sm:p-8">
           <header className="text-center">
             <h1 className="text-3xl font-semibold tracking-tight text-slate-100 sm:text-4xl">Secure Client Login</h1>
             <p className="mt-2 text-sm text-slate-300">Log in to access your secure client dashboard</p>
@@ -82,7 +79,7 @@ export default function ClientAreaLoginPage() {
                   placeholder="Login"
                   required
                   autoComplete="email"
-                  className="h-11 w-full rounded-xl border border-cyan-500/25 bg-slate-900/70 pl-10 pr-3 text-slate-100 outline-none transition focus:border-cyan-400/75 focus:ring-2 focus:ring-cyan-500/25"
+                  className="h-11 w-full rounded-xl border border-cyan-500/25 bg-slate-900/85 pl-10 pr-3 text-slate-100 outline-none transition focus:border-cyan-400/75 focus:ring-2 focus:ring-cyan-500/25"
                 />
               </div>
             </label>
@@ -97,13 +94,13 @@ export default function ClientAreaLoginPage() {
                   placeholder="Password"
                   required
                   autoComplete="current-password"
-                  className="h-11 w-full rounded-xl border border-cyan-500/25 bg-slate-900/70 pl-10 pr-11 text-slate-100 outline-none transition focus:border-cyan-400/75 focus:ring-2 focus:ring-cyan-500/25"
+                  className="h-11 w-full rounded-xl border border-cyan-500/25 bg-slate-900/85 pl-10 pr-11 text-slate-100 outline-none transition focus:border-cyan-400/75 focus:ring-2 focus:ring-cyan-500/25"
                 />
                 <button
                   type="button"
                   aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
                   onClick={() => setShowPassword((value) => !value)}
-                  className="absolute right-2 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-md text-slate-300 transition hover:bg-slate-800/60 hover:text-cyan-300"
+                  className="absolute right-2 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-md text-slate-300 transition hover:bg-slate-800/80 hover:text-cyan-300"
                 >
                   {showPassword ? <FiEyeOff className="h-4 w-4" aria-hidden="true" /> : <FiEye className="h-4 w-4" aria-hidden="true" />}
                 </button>
@@ -126,7 +123,7 @@ export default function ClientAreaLoginPage() {
             </button>
 
             <div className="text-center text-sm">
-              <Link href="/client-area/reset-password" className="text-slate-300 transition hover:text-cyan-300">
+              <Link href="/contact" className="text-slate-300 transition hover:text-cyan-300">
                 Forgot Password?
               </Link>
             </div>

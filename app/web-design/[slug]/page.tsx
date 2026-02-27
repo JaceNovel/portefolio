@@ -53,11 +53,11 @@ export default async function WebProjectPage({ params }: Props) {
       <p className="mt-3 text-sm leading-6 text-slate-300">{project.description}</p>
 
       <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <section className="rounded-2xl border border-slate-800/70 bg-slate-950/40 p-5">
+        <section className="rounded-2xl border border-slate-800/70 bg-slate-950/70 p-5">
           <h2 className="text-sm font-semibold text-white">Stack</h2>
           <p className="mt-2 text-sm text-slate-300">{project.stack}</p>
         </section>
-        <section className="rounded-2xl border border-slate-800/70 bg-slate-950/40 p-5">
+        <section className="rounded-2xl border border-slate-800/70 bg-slate-950/70 p-5">
           <h2 className="text-sm font-semibold text-white">Résultat</h2>
           <p className="mt-2 text-sm text-slate-300">{project.result}</p>
         </section>
@@ -68,7 +68,7 @@ export default async function WebProjectPage({ params }: Props) {
           href={project.siteUrl}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex h-11 items-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 px-4 text-sm font-medium text-emerald-300"
+          className="inline-flex h-11 items-center rounded-xl border border-emerald-500/25 bg-emerald-500/20 px-4 text-sm font-medium text-emerald-300"
         >
           Visiter le site
         </a>

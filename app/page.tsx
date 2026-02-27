@@ -50,26 +50,26 @@ export default async function HomePage() {
         ];
 
   return (
-    <main className="home-cyber-bg relative overflow-hidden">
+    <main className="home-cyber-bg relative">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
         <section className="relative py-10 sm:py-12">
           <div className="p-6 text-center sm:p-10">
-            <h1 className="text-4xl font-bold uppercase tracking-wide text-white sm:text-7xl">Jonadab AMAH</h1>
-            <p className="mt-4 text-xl font-semibold text-slate-100 sm:text-4xl">Cybersecurity Student & Secure Web Architect</p>
-            <p className="mx-auto mt-4 max-w-2xl text-base text-slate-200 sm:text-xl">
+            <h1 className="text-4xl font-bold uppercase tracking-wide text-white drop-shadow-lg sm:text-7xl">Jonadab AMAH</h1>
+            <p className="mt-4 text-xl font-semibold text-slate-50 drop-shadow sm:text-4xl">Cybersecurity Student & Secure Web Architect</p>
+            <p className="mx-auto mt-4 max-w-2xl text-base text-slate-50 drop-shadow sm:text-xl">
               I build secure, scalable, and performance-driven digital platforms
             </p>
 
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/cybersecurity"
-                className="inline-flex h-12 min-w-[270px] items-center justify-center rounded-xl border border-blue-400/40 bg-blue-500/10 px-6 text-base font-semibold text-slate-100 shadow-[0_0_18px_rgba(37,99,235,0.35)] hover:bg-blue-500/20"
+                className="inline-flex h-12 w-full items-center justify-center rounded-xl border border-blue-400/60 bg-blue-500/65 px-6 text-base font-semibold text-slate-100 shadow-[0_0_18px_rgba(37,99,235,0.35)] hover:bg-blue-500/75 sm:w-auto sm:min-w-[270px]"
               >
                 View My Cybersecurity Work
               </Link>
               <Link
                 href="/web-design"
-                className="inline-flex h-12 min-w-[270px] items-center justify-center rounded-xl border border-emerald-400/45 bg-emerald-500/15 px-6 text-base font-semibold text-emerald-100 shadow-[0_0_18px_rgba(16,185,129,0.35)] hover:bg-emerald-500/25"
+                className="inline-flex h-12 w-full items-center justify-center rounded-xl border border-emerald-300/80 bg-emerald-500/80 px-6 text-base font-semibold text-white shadow-[0_0_18px_rgba(16,185,129,0.35)] hover:bg-emerald-500/90 sm:w-auto sm:min-w-[270px]"
               >
                 Create Your Secure Website
               </Link>
@@ -90,7 +90,7 @@ export default async function HomePage() {
               <Link
                 key={p.id}
                 href={p.slug === "web-design" ? "/web-design" : `/web-design/${p.slug}`}
-                className="group overflow-hidden rounded-xl border border-cyan-400/20 bg-slate-950/55 shadow-[0_0_24px_rgba(14,165,233,0.12)]"
+                className="group overflow-hidden rounded-xl border border-cyan-400/20 bg-slate-950/80 shadow-[0_0_24px_rgba(14,165,233,0.12)]"
               >
                 <div className="relative aspect-[16/10] w-full overflow-hidden">
                   {p.imageUrl ? (
@@ -115,7 +115,7 @@ export default async function HomePage() {
                 </div>
                 <div className="p-3">
                   <h3 className="text-xl font-semibold text-white">{p.title}</h3>
-                  <span className="mt-2 inline-flex rounded-md border border-cyan-400/40 bg-cyan-500/10 px-3 py-1 text-sm font-semibold text-cyan-100">
+                  <span className="mt-2 inline-flex rounded-md border border-cyan-400/40 bg-cyan-500/20 px-3 py-1 text-sm font-semibold text-cyan-100">
                     View Project
                   </span>
                 </div>
@@ -126,10 +126,10 @@ export default async function HomePage() {
 
         <section className="pb-12 pt-4 text-center">
           <h2 className="text-4xl font-bold text-white sm:text-5xl">Interested in a Security Audit?</h2>
-          <p className="mt-3 text-lg text-slate-200">Get a free audit of your website’s vulnerabilities</p>
+          <p className="mt-3 text-lg text-slate-50">Get a free audit of your website’s vulnerabilities</p>
           <Link
             href="/audit-security"
-            className="mt-5 inline-flex h-12 items-center justify-center rounded-xl border border-emerald-400/45 bg-emerald-500/15 px-6 text-base font-semibold text-emerald-100 shadow-[0_0_18px_rgba(16,185,129,0.35)] hover:bg-emerald-500/25"
+            className="mt-5 inline-flex h-12 items-center justify-center rounded-xl border border-emerald-400/45 bg-emerald-500/35 px-6 text-base font-semibold text-emerald-100 shadow-[0_0_18px_rgba(16,185,129,0.35)] hover:bg-emerald-500/45"
           >
             Request Free Audit
           </Link>

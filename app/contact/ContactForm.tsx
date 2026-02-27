@@ -55,7 +55,7 @@ export function ContactForm() {
 
   if (ok) {
     return (
-      <div className="rounded-xl border border-emerald-400/35 bg-emerald-500/10 p-4">
+      <div className="rounded-xl border border-emerald-400/35 bg-emerald-500/20 p-4">
         <div className="text-sm font-semibold text-emerald-100">Message envoyé</div>
         <p className="mt-1 text-sm leading-6 text-emerald-50/90">Merci, je vous réponds rapidement.</p>
       </div>
@@ -185,7 +185,7 @@ export function ContactForm() {
         <button
           type="submit"
           disabled={pending}
-          className="inline-flex h-12 items-center rounded-xl border border-cyan-300/40 bg-cyan-500/10 px-8 text-base font-semibold text-cyan-100 shadow-[0_0_18px_rgba(34,211,238,0.22)] transition hover:bg-cyan-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex h-12 items-center rounded-xl border border-cyan-300/40 bg-cyan-500/20 px-8 text-base font-semibold text-cyan-100 shadow-[0_0_18px_rgba(34,211,238,0.22)] transition hover:bg-cyan-500/30 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {pending ? "Sending..." : "Send Message"}
         </button>
