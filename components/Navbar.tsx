@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { FiBookOpen, FiGlobe, FiHome, FiMail, FiShield } from "react-icons/fi";
 
 const links = [
   { href: "/about", label: "About" },
@@ -19,12 +20,15 @@ export function Navbar() {
     return null;
   }
 
+  const hideMobileBottomNav = pathname.startsWith("/client-area") || pathname.startsWith("/client/login");
+
   const isActiveLink = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-800/60 bg-gradient-to-b from-slate-950/95 via-slate-950/80 to-slate-950/95 backdrop-blur-xl">
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
-        <nav className="flex min-h-16 items-center justify-between gap-4">
+    <>
+      <header className="sticky top-0 z-50 border-b border-slate-800/60 bg-gradient-to-b from-slate-950/95 via-slate-950/80 to-slate-950/95 backdrop-blur-xl">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
+          <nav className="flex min-h-16 items-center justify-between gap-4">
           <Link href="/" className="flex min-w-0 items-center gap-3">
             <span className="inline-flex items-center justify-center">
               <Image
@@ -89,35 +93,54 @@ export function Navbar() {
               Client Login
             </Link>
           </div>
-        </nav>
+          </nav>
 
-        <div className="lg:hidden">
-          <div className="-mx-4 flex items-center gap-2 overflow-x-auto px-4 pb-2 pt-1 sm:-mx-6 sm:px-6">
-            {links.map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className={`whitespace-nowrap rounded-full border px-3 py-1.5 text-sm font-medium transition ${
-                  isActiveLink(l.href)
-                    ? "border-cyan-300/45 bg-cyan-500/10 text-cyan-100"
-                    : "border-slate-700/60 bg-slate-900/20 text-slate-200 hover:border-cyan-300/35 hover:text-white"
-                }`}
-              >
-                {l.label}
-              </Link>
-            ))}
+          <div className="pb-3">
+            <Link
+              href="/audit-security"
+              className="mx-auto flex min-h-12 w-full max-w-4xl items-center justify-center rounded-md border border-fuchsia-300/30 bg-gradient-to-r from-fuchsia-500/35 via-blue-500/35 to-violet-500/35 px-3 py-2 text-center text-sm font-semibold leading-snug text-cyan-100 shadow-[0_0_28px_rgba(139,92,246,0.35)]"
+            >
+              ⚡ Request your free security audit
+            </Link>
           </div>
         </div>
+      </header>
 
-        <div className="pb-3">
-          <Link
-            href="/audit-security"
-            className="mx-auto flex min-h-12 w-full max-w-4xl items-center justify-center rounded-md border border-fuchsia-300/30 bg-gradient-to-r from-fuchsia-500/35 via-blue-500/35 to-violet-500/35 px-3 py-2 text-center text-sm font-semibold leading-snug text-cyan-100 shadow-[0_0_28px_rgba(139,92,246,0.35)]"
-          >
-            ⚡ Request your free security audit
-          </Link>
-        </div>
-      </div>
-    </header>
+      {!hideMobileBottomNav ? (
+        <nav
+          aria-label="Bottom navigation"
+          className="fixed inset-x-0 bottom-0 z-50 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 lg:hidden"
+        >
+          <div className="mx-auto grid w-full max-w-md grid-cols-5 gap-1 rounded-2xl border border-slate-800/70 bg-slate-950/70 p-2 shadow-[0_0_30px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+            {(
+              [
+                { href: "/", label: "Accueil", icon: FiHome },
+                { href: "/cybersecurity", label: "Cyber", icon: FiShield },
+                { href: "/web-design", label: "Web", icon: FiGlobe },
+                { href: "/blog", label: "Blog", icon: FiBookOpen },
+                { href: "/contact", label: "Contact", icon: FiMail },
+              ] as const
+            ).map((item) => {
+              const active = isActiveLink(item.href);
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={
+                    active
+                      ? "flex flex-col items-center justify-center gap-1 rounded-xl border border-cyan-300/35 bg-cyan-500/20 py-2 text-xs font-semibold text-cyan-100"
+                      : "flex flex-col items-center justify-center gap-1 rounded-xl border border-transparent py-2 text-xs font-medium text-slate-200/90 hover:bg-slate-900/50 hover:text-white"
+                  }
+                >
+                  <Icon className="h-5 w-5" aria-hidden="true" />
+                  <span className="leading-none">{item.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </nav>
+      ) : null}
+    </>
   );
 }

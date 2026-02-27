@@ -45,7 +45,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-slate-950 text-slate-100 antialiased`}
       >
         <Navbar />
-        <div className="site-zoom-content">{children}</div>
+        <div className="site-zoom-content pb-28 lg:pb-0">{children}</div>
       </body>
     </html>
   );
