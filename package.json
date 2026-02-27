@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "postinstall": "prisma generate && node scripts/fix-prisma-client.mjs",
+    "postinstall": "prisma generate",
     "vercel-build": "node scripts/vercel-build.mjs",
     "prisma:migrate": "prisma migrate dev",
     "prisma:deploy": "prisma migrate deploy",
