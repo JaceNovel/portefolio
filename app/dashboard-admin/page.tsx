@@ -72,6 +72,7 @@ export default async function DashboardAdminPage() {
   const admin = await requireAdmin();
   if (!admin) redirect("/dashboard-admin/login");
 
+  try {
   const [
     clientRequestsCount,
     pendingAuditsCount,
@@ -316,4 +317,17 @@ export default async function DashboardAdminPage() {
       </div>
     </main>
   );
+  } catch {
+    return (
+      <main className="home-cyber-bg relative min-h-[calc(100vh-4rem)] overflow-hidden px-4 py-10 sm:px-6">
+        <div className="mx-auto w-full max-w-3xl rounded-2xl border border-red-500/30 bg-red-500/10 p-6 text-red-100">
+          <h1 className="text-2xl font-semibold">Dashboard indisponible</h1>
+          <p className="mt-3 text-sm leading-6">
+            Une erreur serveur est survenue en chargeant les données admin. Vérifiez la configuration de la base de données
+            sur Vercel puis réessayez.
+          </p>
+        </div>
+      </main>
+    );
+  }
 }

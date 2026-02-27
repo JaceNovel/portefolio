@@ -6,17 +6,17 @@ const serverEnvSchema = z.object({
   RESEND_API_KEY: z.string().min(1).optional(),
   RESEND_FROM: z.string().min(1).optional(),
 
-  UPSTASH_REDIS_REST_URL: z.string().url().optional(),
+  UPSTASH_REDIS_REST_URL: z.string().min(1).optional(),
   UPSTASH_REDIS_REST_TOKEN: z.string().min(1).optional(),
 
-  ADMIN_EMAIL: z.string().email().optional(),
+  ADMIN_EMAIL: z.string().min(1).optional(),
   ADMIN_PASSWORD_HASH: z.string().min(1).optional(),
   ADMIN_PASSWORD: z.string().min(1).optional(),
-  ADMIN_JWT_SECRET: z.string().min(16).optional(),
+  ADMIN_JWT_SECRET: z.string().min(1).optional(),
 
-  CLIENT_JWT_SECRET: z.string().min(16).optional(),
+  CLIENT_JWT_SECRET: z.string().min(1).optional(),
 
-  NEXT_PUBLIC_SITE_URL: z.string().url().optional(),
+  NEXT_PUBLIC_SITE_URL: z.string().min(1).optional(),
 });
 
 export function getServerEnv() {
