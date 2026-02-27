@@ -1,0 +1,133 @@
+import Link from "next/link";
+import Image from "next/image";
+import { prisma } from "../lib/prisma";
+import { TechnologiesSection } from "../components/TechnologiesSection";
+
+export const revalidate = 60;
+
+export default async function HomePage() {
+  const projects = await prisma.webProject
+    .findMany({
+      orderBy: { createdAt: "desc" },
+      take: 3,
+      select: { id: true, title: true, slug: true, description: true, imageUrl: true },
+    })
+    .catch(() => []);
+
+  const projectCards =
+    projects.length > 0
+      ? projects
+      : [
+          {
+            id: "demo-1",
+            title: "Modern Business Site",
+            slug: "web-design",
+            description: "Architecture moderne et SEO-ready.",
+            imageUrl: "",
+          },
+          {
+            id: "demo-2",
+            title: "E-Commerce Platform",
+            slug: "web-design",
+            description: "Parcours utilisateur sécurisé et rapide.",
+            imageUrl: "",
+          },
+          {
+            id: "demo-3",
+            title: "Custom Dashboard",
+            slug: "web-design",
+            description: "Espace admin sécurisé avec API durcies.",
+            imageUrl: "",
+          },
+        ];
+
+  return (
+    <main className="home-cyber-bg relative overflow-hidden">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
+        <section className="relative py-10 sm:py-12">
+          <div className="p-6 text-center sm:p-10">
+            <h1 className="text-4xl font-bold uppercase tracking-wide text-white sm:text-7xl">Jonadab AMAH</h1>
+            <p className="mt-4 text-xl font-semibold text-slate-100 sm:text-4xl">Cybersecurity Student & Secure Web Architect</p>
+            <p className="mx-auto mt-4 max-w-2xl text-base text-slate-200 sm:text-xl">
+              I build secure, scalable, and performance-driven digital platforms
+            </p>
+
+            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Link
+                href="/cybersecurity"
+                className="inline-flex h-12 min-w-[270px] items-center justify-center rounded-xl border border-blue-400/40 bg-blue-500/10 px-6 text-base font-semibold text-slate-100 shadow-[0_0_18px_rgba(37,99,235,0.35)] hover:bg-blue-500/20"
+              >
+                View My Cybersecurity Work
+              </Link>
+              <Link
+                href="/web-design"
+                className="inline-flex h-12 min-w-[270px] items-center justify-center rounded-xl border border-emerald-400/45 bg-emerald-500/15 px-6 text-base font-semibold text-emerald-100 shadow-[0_0_18px_rgba(16,185,129,0.35)] hover:bg-emerald-500/25"
+              >
+                Create Your Secure Website
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <TechnologiesSection />
+
+        <section className="pb-6">
+          <div className="flex items-center gap-4">
+            <h2 className="text-3xl font-semibold text-white">Latest Projects</h2>
+            <div className="h-px flex-1 bg-cyan-400/30" />
+          </div>
+
+          <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
+            {projectCards.map((p, index) => (
+              <Link
+                key={p.id}
+                href={p.slug === "web-design" ? "/web-design" : `/web-design/${p.slug}`}
+                className="group overflow-hidden rounded-xl border border-cyan-400/20 bg-slate-950/55 shadow-[0_0_24px_rgba(14,165,233,0.12)]"
+              >
+                <div className="relative aspect-[16/10] w-full overflow-hidden">
+                  {p.imageUrl ? (
+                    <Image
+                      src={p.imageUrl}
+                      alt={p.title}
+                      fill
+                      sizes="(min-width: 768px) 33vw, 100vw"
+                      className="object-cover transition duration-300 group-hover:scale-[1.03]"
+                    />
+                  ) : (
+                    <div
+                      className={`h-full w-full bg-gradient-to-br ${
+                        index === 0
+                          ? "from-blue-900 via-slate-900 to-cyan-900"
+                          : index === 1
+                            ? "from-slate-900 via-blue-950 to-orange-900"
+                            : "from-slate-950 via-blue-900 to-cyan-950"
+                      }`}
+                    />
+                  )}
+                </div>
+                <div className="p-3">
+                  <h3 className="text-xl font-semibold text-white">{p.title}</h3>
+                  <span className="mt-2 inline-flex rounded-md border border-cyan-400/40 bg-cyan-500/10 px-3 py-1 text-sm font-semibold text-cyan-100">
+                    View Project
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="pb-12 pt-4 text-center">
+          <h2 className="text-4xl font-bold text-white sm:text-5xl">Interested in a Security Audit?</h2>
+          <p className="mt-3 text-lg text-slate-200">Get a free audit of your website’s vulnerabilities</p>
+          <Link
+            href="/audit-security"
+            className="mt-5 inline-flex h-12 items-center justify-center rounded-xl border border-emerald-400/45 bg-emerald-500/15 px-6 text-base font-semibold text-emerald-100 shadow-[0_0_18px_rgba(16,185,129,0.35)] hover:bg-emerald-500/25"
+          >
+            Request Free Audit
+          </Link>
+        </section>
+      </div>
+    </main>
+  );
+}
+

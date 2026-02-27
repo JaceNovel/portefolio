@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: portefolio_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: portefolio
+      POSTGRES_PASSWORD: portefolio_password
+      POSTGRES_DB: portefolio
+    ports:
+      - "5432:5432"
+    volumes:
+      - portefolio_pgdata:/var/lib/postgresql/data
+
+volumes:
+  portefolio_pgdata:

@@ -1,0 +1,18 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="amahLogoBg" x1="36" y1="24" x2="220" y2="232" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#22D3EE"/>
+      <stop offset="1" stop-color="#A855F7"/>
+    </linearGradient>
+    <linearGradient id="amahLogoInset" x1="64" y1="52" x2="200" y2="204" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F172A"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+  </defs>
+
+  <path d="M128 18L214 52V116C214 168 180 212 128 236C76 212 42 168 42 116V52L128 18Z" fill="url(#amahLogoBg)"/>
+  <path d="M128 34L200 63V114C200 158 173 195 128 216C83 195 56 158 56 114V63L128 34Z" fill="url(#amahLogoInset)"/>
+
+  <path d="M83 168L113 86H126L156 168H141L135 151H104L98 168H83ZM109 139H130L120 108L109 139Z" fill="#E2E8F0"/>
+  <path d="M166 86H181V155H217V168H166V86Z" fill="#67E8F9"/>
+</svg>

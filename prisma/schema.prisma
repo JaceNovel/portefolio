@@ -1,0 +1,125 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/@prisma/client/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model SecurityAuditRequest {
+  id          String   @id @default(uuid())
+  name        String
+  email       String
+  websiteUrl  String
+  description String
+  status      String   @default("Nouveau")
+  createdAt   DateTime @default(now())
+
+  @@index([email])
+  @@index([createdAt])
+}
+
+model ProjectRequest {
+  id            String   @id @default(uuid())
+  name          String
+  email         String
+  phone         String?
+  requestType   String?
+  budget        String?
+  description   String?
+
+  siteType      String?
+  pageCount     Int?
+  options       Json?
+  estimateCents Int?
+
+  source        String   @default("contact")
+  status        String   @default("Nouveau")
+  createdAt     DateTime @default(now())
+
+  @@index([email])
+  @@index([createdAt])
+}
+
+model WebProject {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  description String
+  imageUrl    String
+  siteUrl     String
+  stack       String
+  result      String
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model BlogPost {
+  id        String   @id @default(uuid())
+  title     String
+  slug      String   @unique
+  excerpt   String
+  content   String
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([published, createdAt])
+}
+
+model Client {
+  id        String          @id @default(uuid())
+  name      String
+  email     String          @unique
+  password  String
+  mustResetPassword Boolean @default(false)
+  projects  ClientProject[]
+  messages  ClientMessage[]
+  createdAt DateTime        @default(now())
+
+  @@index([createdAt])
+}
+
+model ClientProject {
+  id          String              @id @default(uuid())
+  title       String
+  description String
+  progress    Int
+  clientId    String
+  client      Client              @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  files       ClientProjectFile[]
+  createdAt   DateTime            @default(now())
+
+  @@index([clientId])
+  @@index([createdAt])
+}
+
+model ClientProjectFile {
+  id        String        @id @default(uuid())
+  name      String
+  url       String
+  projectId String
+  project   ClientProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt DateTime      @default(now())
+
+  @@index([projectId])
+  @@index([createdAt])
+}
+
+model ClientMessage {
+  id        String   @id @default(uuid())
+  content   String
+  clientId  String
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([clientId])
+  @@index([createdAt])
+}
