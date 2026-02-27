@@ -1,7 +1,15 @@
 import { execSync } from "node:child_process";
 
-function run(cmd) {
-  execSync(cmd, { stdio: "inherit" });
+function run(cmd, options = {}) {
+  const { allowFailure = false } = options;
+  try {
+    execSync(cmd, { stdio: "inherit" });
+    return true;
+  } catch (error) {
+    if (!allowFailure) throw error;
+    console.warn(`Command failed but was allowed to continue: ${cmd}`);
+    return false;
+  }
 }
 
 function normalizeEnvValue(value) {
@@ -38,6 +46,7 @@ function resolveDatabaseUrl() {
 const vercelEnv = process.env.VERCEL_ENV;
 const isProduction = vercelEnv === "production";
 const databaseUrl = resolveDatabaseUrl();
+const strictMigrate = normalizeEnvValue(process.env.PRISMA_MIGRATE_STRICT).toLowerCase() === "true";
 
 if (databaseUrl) {
   process.env.DATABASE_URL = databaseUrl;
@@ -47,11 +56,15 @@ run("npx prisma generate");
 
 if (isProduction) {
   if (!databaseUrl) {
-    throw new Error(
-      "A valid PostgreSQL DATABASE_URL is required on Vercel production (or POSTGRES_PRISMA_URL/POSTGRES_URL_NON_POOLING/POSTGRES_URL)."
-    );
+    const message =
+      "Skipping prisma migrate deploy: missing valid DATABASE_URL (or PRISMA_DATABASE_URL/POSTGRES_PRISMA_URL/POSTGRES_URL_NON_POOLING/POSTGRES_URL).";
+    if (strictMigrate) {
+      throw new Error(message);
+    }
+    console.warn(message);
+  } else {
+    run("npx prisma migrate deploy", { allowFailure: !strictMigrate });
   }
-  run("npx prisma migrate deploy");
 } else {
   console.log(
     `Skipping prisma migrate deploy (VERCEL_ENV=${vercelEnv ?? "undefined"}).`
